@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Container from './Container'; // ⬅️ Tambahkan ini
 
 const Navbar = () => {
     const [isSticky, setIsSticky] = useState(false);
@@ -6,8 +7,7 @@ const Navbar = () => {
     useEffect(() => {
         const handleScroll = () => {
             const scrollTop = window.scrollY;
-            // Ubah 847 jika tinggi Hero berbeda
-            setIsSticky(scrollTop > 847);
+            setIsSticky(scrollTop > 110);
         };
 
         window.addEventListener('scroll', handleScroll);
@@ -16,15 +16,16 @@ const Navbar = () => {
 
     return (
         <header
-            className={`w-full h-[91px] z-50 backdrop-blur-md transition-all duration-300
-                ${isSticky ? 'fixed top-0 bg-white/70 shadow-md' : 'absolute top-0 bg-white/30'}
-            `}
+            className={`w-full h-[81px] z-50 backdrop-blur-md transition-all duration-300
+        ${isSticky ? 'fixed top-0 bg-white/70 shadow-md' : 'absolute top-0 bg-white/30'}
+    `}
         >
-            <div className="max-w-[1440px] h-full mx-auto px-6 flex items-center justify-between">
+            {/* ✅ Ganti ini dengan Container */}
+            <Container className="h-full flex items-center justify-between">
                 {/* Logo */}
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center">
                     <img
-                        className="h-10 w-auto object-contain"
+                        className="h-12 w-auto object-contain"
                         src="/assets/img/Logo.png"
                         alt="Logo SEVEN INC."
                     />
@@ -32,20 +33,18 @@ const Navbar = () => {
 
                 {/* Navigation Menu */}
                 <nav>
-                    <ul className="flex space-x-8 text-gray-800 font-semibold">
+                    <ul className="flex gap-12 text-gray-800 font-semibold text-[18px]">
                         <li className="hover:text-blue-600 cursor-pointer">Beranda</li>
                         <li className="hover:text-blue-600 cursor-pointer">Tentang Kami</li>
                         <li className="hover:text-blue-600 cursor-pointer">Bisnis Kami</li>
                         <li className="hover:text-blue-600 cursor-pointer flex items-center">
                             Karir
-                            <svg className="w-4 h-4 ml-1 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                            </svg>
+                            <i className="ri-arrow-right-s-line ml-1 text-[18px] text-gray-500"></i>
                         </li>
                         <li className="hover:text-blue-600 cursor-pointer">Kontak</li>
                     </ul>
                 </nav>
-            </div>
+            </Container>
         </header>
     );
 };
