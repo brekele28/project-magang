@@ -32,4 +32,7 @@ npm run dev
 • Tailwind CSS
 
 ```
----
+# Jika terjadi error install package react-flowbite
+
+```bash
+npx flowbite-react@latest init
