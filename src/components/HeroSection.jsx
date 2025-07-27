@@ -13,11 +13,11 @@ const HeroSection = () => {
 
             {/* Text kiri dengan Container */}
             <Container>
-                <div className="absolute top-1/2 -translate-y-1/2 text-left text-white max-w-[600px]">
-                    <h1 className="text-[48px] md:text-[56px] font-bold leading-tight mb-4">
+                <div className="absolute top-1/2 -translate-y-1/2 text-left text-white max-w-[682px] animate__animated animate__fadeInUp">
+                    <h1 className="text-[56px] md:text-[64px] font-bold leading-tight mb-4">
                         Menaungi Inovasi,<br />Merajut Masa Depan
                     </h1>
-                    <p className="text-[18px] md:text-[20px] font-normal">
+                    <p className="text-[18px] md:text-[24px] font-normal">
                         Holding Multisektor Teknologi, Fashion, Edukasi & Jasa
                     </p>
                 </div>
