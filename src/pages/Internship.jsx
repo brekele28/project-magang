@@ -26,89 +26,112 @@ const positions = [
 const Internship = () => {
     return (
         <Layout>
-            <div className="bg-white text-gray-800 pt-[120px] pb-24">
+            <div className="bg-white text-gray-800 pt-[130px] pb-24">
                 <Container>
                     {/* Hero Section */}
-                    <div className="flex flex-col md:flex-row items-center md:items-center gap-16">
-                        <div className="flex-1 mt-2">
-                            <h2 className="mb-3 ml-1 tracking-[0.25em] uppercase text-gray-800 text-lg">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between">
+                        {/* Konten Kiri */}
+                        <div className="w-full md:w-[58%]">
+                            <h3 className="text-[20px] tracking-[0.46em] uppercase text-gray-700 mb-3 font-regular">
                                 Internship
-                            </h2>
-                            <h1 className="font-bold text-black text-[45px] leading-[1.2] max-w-[450px]">
-                                Temukan<br />
-                                Kesempatan, Bangun<br />
-                                Masa Depan.
+                            </h3>
+                            <h1 className="text-[36px] md:text-[40px] font-bold text-gray-900 leading-snug mb-4">
+                                Temukan <br /> Kesempatan, Bangun <br /> Masa Depan.
                             </h1>
                         </div>
 
-                        <div className="flex-1">
+                        {/* Konten Kanan (Gambar) */}
+                        <div className="w-full flex justify-end">
                             <img
                                 src="/assets/img/Internship.png"
-                                alt="Internship"
-                                className="w-full h-auto max-w-[600px] rounded-xl shadow-md"
+                                alt="Lowongan Kerja"
+                                className="max-w-[679px] h-[453px] w-full object-cover"
                             />
                         </div>
                     </div>
 
                     {/* Core Value Section */}
-                    <div className="mt-24 flex flex-col md:flex-row gap-10">
+                    <div className="mt-24 flex flex-col md:flex-row justify-between gap-10">
+                        {/* Bagian Kiri */}
                         <div className="md:w-1/2 flex flex-col justify-center mt-10">
-                            <h2 className="uppercase tracking-[0.25em] text-gray-600 text-base mb-3">
+                            <h2 className="uppercase tracking-[0.45em] text-gray-600 text-[20px] mb-3">
                                 Core Value Perusahaan
                             </h2>
 
-                            <h3 className="text-3xl font-bold text-gray-900 mb-4 leading-snug">
+                            <h3 className="text-[32px] font-bold text-gray-900 mb-4 leading-snug">
                                 Prinsip Utama yang Menjadi<br />Dasar Tumbuh Bersama
                             </h3>
 
-                            <p className="text-gray-600 text-base mb-5 max-w-md leading-relaxed">
-                                Sembilan nilai inti ini menjadi pedoman tim Seven INC. dalam
-                                membangun budaya kerja profesional, kolaboratif, dan berkelanjutan
-                                menuju visi perusahaan yang terus berkembang.
+                            <p className="text-gray-600 text-[16px] mb-5 leading-relaxed">
+                                Sembilan nilai inti ini menjadi pedoman tim Seven <br /> INC. dalam
+                                membangun budaya kerja profesional, <br /> kolaboratif, dan berkelanjutan
+                                menuju visi <br /> perusahaan yang terus berkembang.
                             </p>
 
-                            {/* Tombol navigasi menggunakan Remix Icon */}
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-12">
                                 <button className="w-14 h-14 rounded-full border border-red-500 hover:bg-red-500 transition cursor-pointer flex items-center justify-center group">
-                                    <i class="ri-arrow-left-s-line text-red-500 group-hover:text-white text-3xl"></i>
+                                    <i className="ri-arrow-left-s-line text-red-500 group-hover:text-white text-3xl"></i>
                                 </button>
                                 <button className="w-14 h-14 rounded-full border border-red-500 hover:bg-red-500 transition cursor-pointer flex items-center justify-center group">
-                                    <i class="ri-arrow-right-s-line text-red-500 group-hover:text-white text-3xl"></i>
+                                    <i className="ri-arrow-right-s-line text-red-500 group-hover:text-white text-3xl"></i>
                                 </button>
                             </div>
                         </div>
 
-                        <div className="md:w-1/2 w-full flex flex-col sm:flex-row gap-x-13 ml-4">
-                            <div className="border border-gray-300 rounded-xl px-6 py-8 w-full sm:max-w-[220px] min-h-[360px] text-center shadow hover:shadow-md transition">
-                                <div className="flex justify-center mb-6">
+                        {/* Bagian Kanan */}
+                        <div className="md:w-[50%] w-full flex flex-col sm:flex-row gap-x-13 justify-end ml-auto">
+                            <div
+                                className="border border-gray-300 rounded-xl shadow hover:shadow-md transition text-center"
+                                style={{ width: "302px", height: "555px" }}
+                            >
+                                <div className="flex flex-col items-center h-full pt-14">
                                     <img
                                         src="/assets/img/vectorSalaman.png"
                                         alt="Icon Integritas"
-                                        className="w-24 h-24"
+                                        style={{ width: "143px", height: "143px" }}
                                     />
+                                    <h4
+                                        className="font-semibold text-gray-950 mb-7 pt-8"
+                                        style={{ fontSize: "20px" }}
+                                    >
+                                        Integritas
+                                    </h4>
+                                    <p
+                                        className="text-gray-600 leading-relaxed px-4"
+                                        style={{ fontSize: "16px" }}
+                                    >
+                                        Sikap dasar setiap insan Seven INC. untuk selaras antara pikiran,
+                                        ucapan, dan tindakan, menjaga kejujuran, tanggung jawab, serta
+                                        kerahasiaan sesuai visi dan amanah perusahaan.
+                                    </p>
                                 </div>
-                                <h4 className="font-semibold text-lg text-gray-950 mb-7">Integritas</h4>
-                                <p className="text-sm text-gray-600 leading-relaxed">
-                                    Sikap dasar setiap insan Seven INC. untuk selaras antara pikiran,
-                                    ucapan, dan tindakan, menjaga kejujuran, tanggung jawab, serta
-                                    kerahasiaan sesuai visi dan amanah perusahaan.
-                                </p>
                             </div>
 
-                            <div className="border border-gray-300 rounded-xl px-6 py-8 w-full sm:max-w-[220px] min-h-[360px] text-center shadow hover:shadow-md transition">
-                                <div className="flex justify-center mb-6">
+                            <div
+                                className="border border-gray-300 rounded-xl shadow hover:shadow-md transition text-center"
+                                style={{ width: "302px", height: "555px" }}
+                            >
+                                <div className="flex flex-col items-center h-full pt-14">
                                     <img
                                         src="/assets/img/vectorPerson.png"
                                         alt="Icon Positive"
-                                        className="w-24 h-24"
+                                        style={{ width: "143px", height: "143px" }}
                                     />
+                                    <h4
+                                        className="font-semibold text-gray-950 mb-7 pt-8"
+                                        style={{ fontSize: "20px" }}
+                                    >
+                                        Positive Vibe
+                                    </h4>
+                                    <p
+                                        className="text-gray-600 leading-relaxed px-4"
+                                        style={{ fontSize: "16px" }}
+                                    >
+                                        Menciptakan lingkungan kerja yang suportif melalui sikap positif,
+                                        penyampaian informasi yang membangun, serta menghindari gosip dan
+                                        prasangka yang merugikan tim.
+                                    </p>
                                 </div>
-                                <h4 className="font-semibold text-lg text-gray-950 mb-7">Positive Vibe</h4>
-                                <p className="text-sm text-gray-600 leading-relaxed">
-                                    Menciptakan lingkungan kerja yang suportif melalui sikap positif,
-                                    penyampaian informasi yang membangun, serta menghindari gosip dan
-                                    prasangka yang merugikan tim.
-                                </p>
                             </div>
                         </div>
                     </div>

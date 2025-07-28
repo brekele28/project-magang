@@ -38,6 +38,7 @@ const Navbar = () => {
                         <Link to="/" className="hover:text-blue-600 cursor-pointer">Beranda</Link>
                         <Link to="/tentang-kami" className="hover:text-blue-600 cursor-pointer">Tentang Kami</Link>
                         <Link to="/bisnis-kami" className="hover:text-blue-600 cursor-pointer">Bisnis Kami</Link>
+                        <Link to="/berita" className="hover:text-blue-600 cursor-pointer">Berita</Link>
                         {/* Dropdown Karir */}
                         <li
                             className="hover:text-blue-600 cursor-pointer flex items-center relative"
@@ -59,9 +60,13 @@ const Navbar = () => {
                                     >
                                         Internship
                                     </Link>
-                                    <button className="w-full px-4 py-2 text-sm font-bold hover:bg-gray-300 text-left rounded-b-lg">
+                                    <Link
+                                        to="/lowongan-kerja"
+                                        className="block w-full px-4 py-2 text-sm font-bold hover:bg-gray-300 text-left rounded-b-lg"
+                                        onClick={() => setShowDropdown(false)}
+                                    >
                                         Lowongan Kerja
-                                    </button>
+                                    </Link>
                                 </div>
                             )}
                         </li>
