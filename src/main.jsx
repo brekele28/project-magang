@@ -6,6 +6,8 @@ import App from "./App.jsx";
 import TentangKamiFull from "./pages/TentangKamiFull.jsx";
 import BisnisKamiFull from "./pages/BisnisKamiFull.jsx";
 import Internship from "./pages/Internship.jsx";
+import LowonganKerja from "./pages/LowonganKerja.jsx";
+import LowonganKerjaFull from "./pages/LowonganKerjaFull.jsx";
 
 import "remixicon/fonts/remixicon.css";
 import 'animate.css';
@@ -22,6 +24,8 @@ createRoot(document.getElementById("root")).render(
         <Route path="/tentang-kami" element={<TentangKamiFull />} />
         <Route path="/bisnis-kami" element={<BisnisKamiFull />} />
         <Route path="/internship" element={<Internship />} />
+        <Route path="/lowongan-kerja" element={<LowonganKerja />} />
+        <Route path="/lowongan-full" element={<LowonganKerjaFull />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>
