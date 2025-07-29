@@ -48,7 +48,7 @@ const Kontak = () => {
     };
 
     return (
-        <section className="bg-white pb-25 py-10">
+        <section className="bg-white mb-[60px] mt-[81px]">
             <Container>
                 <div className="flex flex-col md:flex-row gap-8 md:gap-16">
                     {/* Kiri: Info Kontak */}

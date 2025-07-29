@@ -34,7 +34,7 @@ const Navbar = () => {
 
                 {/* Navigation Menu */}
                 <nav>
-                    <ul className="flex gap-10 text-gray-800 font-semibold text-[18px]">
+                    <ul className="flex gap-12 text-gray-800 font-semibold text-[18px]">
                         <Link to="/" className="hover:text-blue-600 cursor-pointer">Beranda</Link>
                         <Link to="/tentang-kami" className="hover:text-blue-600 cursor-pointer">Tentang Kami</Link>
                         <Link to="/bisnis-kami" className="hover:text-blue-600 cursor-pointer">Bisnis Kami</Link>
