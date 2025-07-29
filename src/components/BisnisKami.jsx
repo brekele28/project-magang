@@ -9,7 +9,7 @@ const businessLines = [
 
 const BisnisKami = () => {
     return (
-        <section className="w-full bg-white pt-5">
+        <section className="w-full bg-white mt-[85px]">
             <Container>
                 {/* Heading Section */}
                 <div className="text-center mb-6">

@@ -1,42 +1,110 @@
+import { useState } from "react";
 import Layout from "../components/Layout";
 import Footer from "../components/Footer";
 import Container from "../components/Container";
 
-// 🔹 Pindahkan array data ke luar komponen
-const jobs = [
-    {
-        title: "Staff Human Resources Development (HRD)",
-        company: "Seven INC",
-        location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
-        closeDate: "30 Juni 2025",
-    },
-    {
-        title: "Staff Human Resources Development (HRD)",
-        company: "Seven INC",
-        location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
-        closeDate: "30 Juni 2025",
-    },
-    {
-        title: "Staff Human Resources Development (HRD)",
-        company: "Seven INC",
-        location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
-        closeDate: "30 Juni 2025",
-    },
-    {
-        title: "Staff Human Resources Development (HRD)",
-        company: "Seven INC",
-        location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
-        closeDate: "30 Juni 2025",
-    },
-    {
-        title: "Staff Human Resources Development (HRD)",
-        company: "Seven INC",
-        location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
-        closeDate: "30 Juni 2025",
-    },
-];
+const allJobs = {
+    1: [
+        {
+            title: "Staff Human Resources Development (HRD)",
+            company: "Seven INC",
+            location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
+            closeDate: "30 Juni 2025",
+        },
+        {
+            title: "Staff Human Resources Development (HRD)",
+            company: "Seven INC",
+            location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
+            closeDate: "30 Juni 2025",
+        },
+        {
+            title: "Staff Human Resources Development (HRD)",
+            company: "Seven INC",
+            location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
+            closeDate: "30 Juni 2025",
+        },
+        {
+            title: "Staff Human Resources Development (HRD)",
+            company: "Seven INC",
+            location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
+            closeDate: "30 Juni 2025",
+        },
+        {
+            title: "Staff Human Resources Development (HRD)",
+            company: "Seven INC",
+            location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
+            closeDate: "30 Juni 2025",
+        },
+    ],
+    2: [
+        {
+            title: "UJI Coba Halaman 2",
+            company: "Seven INC",
+            location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
+            closeDate: "30 Juni 2025",
+        },
+        {
+            title: "UJI Coba Halaman 2",
+            company: "Seven INC",
+            location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
+            closeDate: "30 Juni 2025",
+        },
+        {
+            title: "UJI Coba Halaman 2",
+            company: "Seven INC",
+            location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
+            closeDate: "30 Juni 2025",
+        },
+        {
+            title: "UJI Coba Halaman 2",
+            company: "Seven INC",
+            location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
+            closeDate: "30 Juni 2025",
+        },
+        {
+            title: "UJI Coba Halaman 2",
+            company: "Seven INC",
+            location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
+            closeDate: "30 Juni 2025",
+        },
+    ],
+    3: [
+        {
+            title: "UJI Coba Halaman 3",
+            company: "Seven INC",
+            location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
+            closeDate: "30 Juni 2025",
+        },
+        {
+            title: "UJI Coba Halaman 3",
+            company: "Seven INC",
+            location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
+            closeDate: "30 Juni 2025",
+        },
+        {
+            title: "UJI Coba Halaman 3",
+            company: "Seven INC",
+            location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
+            closeDate: "30 Juni 2025",
+        },
+        {
+            title: "UJI Coba Halaman 3",
+            company: "Seven INC",
+            location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
+            closeDate: "30 Juni 2025",
+        },
+        {
+            title: "UJI Coba Halaman 3",
+            company: "Seven INC",
+            location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
+            closeDate: "30 Juni 2025",
+        },
+    ],
+};
 
 const LowonganKerjaFull = () => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const jobs = allJobs[currentPage];
     return (
         <Layout>
             <div className="bg-white text-gray-800 pt-[130px] pb-24">
@@ -115,31 +183,49 @@ const LowonganKerjaFull = () => {
                         {/* Tombol Pagination */}
                         <div className="flex justify-center">
                             <nav aria-label="Page navigation example">
-                                <ul class="flex items-center -space-x-px h-10 text-base">
+                                <ul className="flex items-center -space-x-px h-10 text-base">
+
+                                    {/* Tombol Arrow Left (hanya muncul jika currentPage > 1) */}
+                                    {currentPage > 1 && (
+                                        <li>
+                                            <button
+                                                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                                className="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-black bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 cursor-pointer"
+                                            >
+                                                <svg className="w-3 h-3 rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 1 1 5l4 4" />
+                                                </svg>
+                                            </button>
+                                        </li>
+                                    )}
+
+                                    {/* Tombol Halaman */}
+                                    {[1, 2, 3].map((page) => (
+                                        <li key={page}>
+                                            <button
+                                                onClick={() => setCurrentPage(page)}
+                                                className={`flex items-center justify-center px-4 h-10 leading-tight border border-gray-300 cursor-pointer ${currentPage === page
+                                                        ? "bg-gray-800 text-white"
+                                                        : "bg-white text-black hover:bg-gray-100 hover:text-gray-700"
+                                                    }`}
+                                            >
+                                                {page}
+                                            </button>
+                                        </li>
+                                    ))}
+
+                                    {/* Tombol Arrow Right */}
                                     <li>
-                                        <a href="#" class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-black bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-white dark:hover:bg-gray-700 dark:hover:text-white">
-                                            <span class="sr-only">Previous</span>
-                                            <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4" />
+                                        <button
+                                            onClick={() =>
+                                                setCurrentPage((prev) => Math.min(prev + 1, Object.keys(allJobs).length))
+                                            }
+                                            className="flex items-center justify-center px-4 h-10 leading-tight text-black bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 cursor-pointer"
+                                        >
+                                            <svg className="w-3 h-3 rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4" />
                                             </svg>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-black bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-white dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-black bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-white dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-black bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-white dark:hover:bg-gray-700 dark:hover:text-white">3</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="flex items-center justify-center px-4 h-10 leading-tight text-black bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-white dark:hover:bg-gray-700 dark:hover:text-white">
-                                            <span class="sr-only">Next</span>
-                                            <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
-                                            </svg>
-                                        </a>
+                                        </button>
                                     </li>
                                 </ul>
                             </nav>

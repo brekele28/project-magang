@@ -51,7 +51,7 @@ const Internship = () => {
                     </div>
 
                     {/* Core Value Section */}
-                    <div className="mt-24 flex flex-col md:flex-row justify-between gap-10">
+                    <div className="mt-[74px] flex flex-col md:flex-row justify-between gap-10">
                         {/* Bagian Kiri */}
                         <div className="md:w-1/2 flex flex-col justify-center mt-10">
                             <h2 className="uppercase tracking-[0.45em] text-gray-600 text-[20px] mb-3">
@@ -137,18 +137,19 @@ const Internship = () => {
                     </div>
 
                     {/* Syarat & Ketentuan */}
-                    <div className="mt-24 flex flex-col md:flex-row gap-10">
+                    <div className="mt-[74px] flex flex-col md:flex-row justify-between">
                         <div className="md:w-1/2 flex flex-col justify-center mt-8">
-                            <h2 className="uppercase tracking-[0.4em] text-gray-600 text-sm mb-3">
+                            <h2 className="uppercase tracking-[0.45em] text-gray-600 text-[20px] mb-3">
                                 Syarat & Ketentuan
                             </h2>
-                            <h3 className="text-[28px] md:text-[32px] font-bold text-gray-900 leading-snug">
+                            <h3 className="text-[32px] font-bold text-gray-900 leading-snug">
                                 Persiapkan Dirimu, Tumbuh<br />Bersama Kami.
                             </h3>
                         </div>
 
-                        <div className="md:w-1/2 flex justify-center">
-                            <ol className="list-decimal pl-5 space-y-2 text-gray-700 text-[16px] leading-relaxed max-w-[500px]">
+                        {/* Konten Bagian Kanan */}
+                        <div className="md:w-[55%]">
+                            <ol className="list-decimal pl-5 space-y-1 text-gray-700 text-[16px] leading-relaxed w-full">
                                 <li>Mengisi Formulir Pendaftaran Magang.</li>
                                 <li>Menyertakan surat pengantar atau surat tugas resmi dari pihak sekolah atau perguruan tinggi.</li>
                                 <li>Telah memperoleh izin atau persetujuan dari orang tua atau wali sebelum mengikuti program magang.</li>
@@ -160,19 +161,19 @@ const Internship = () => {
                     </div>
 
                     {/* Bagian Paling Bawah */}
-                    <div className="mt-20 text-center max-w-[800px] mx-auto">
-                        <h2 className="tracking-[0.4em] uppercase text-gray-600 text-sm mb-3">
+                    <div className="mt-[74px] text-center max-w-[900px] mx-auto">
+                        <h2 className="tracking-[0.6em] uppercase text-gray-600 text-[20px] mb-3">
                             Formasi Internship
                         </h2>
-                        <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+                        <h3 className="text-[32px] font-bold text-gray-900 mb-4">
                             Bangun Kompetensi dan Karakter Bersama Seven INC.
                         </h3>
-                        <p className="text-gray-600 text-[15px] leading-relaxed">
-                            Program magang dan internship di Seven INC. dirancang untuk menjadi wadah bagi siswa, mahasiswa, maupun individu umum
-                            yang ingin mengembangkan keterampilan praktis dan kesiapan kerja melalui bimbingan langsung, pelatihan intensif, serta
-                            pengalaman di lingkungan industri multisektor.
-                        </p>
                     </div>
+                    <p className="text-gray-600 text-[16px] leading-relaxed text-center">
+                        Program magang dan internship di Seven INC. dirancang untuk menjadi wadah bagi siswa, mahasiswa, maupun individu umum
+                        yang ingin mengembangkan keterampilan praktis dan kesiapan kerja melalui bimbingan langsung, pelatihan intensif, serta
+                        pengalaman di lingkungan<br />industri multisektor.
+                    </p>
                     {/* Bagian Card 18 */}
                     <div className="mt-12 grid grid-cols-6 gap-14">
                         {positions.map((item, index) => (
@@ -187,21 +188,21 @@ const Internship = () => {
                             </div>
                         ))}
                     </div>
+
                     {/* Konten Fasilitas yang Didapat */}
-                    <div className="mt-16 flex flex-col md:flex-row items-center md:items-center gap-6">
-                        {/* Bagian Kiri */}
-                        <div className="md:w-1/2 flex flex-col justify-center">
-                            <p className="tracking-[0.5em] uppercase text-gray-700 text-[20px] mb-3">
+                    <div className="mt-[74px] flex flex-col md:flex-row justify-between">
+                        <div className="md:w-1/2 flex flex-col justify-center mt-8">
+                            <h2 className="uppercase tracking-[0.45em] text-gray-600 text-[20px] mb-3">
                                 Fasilitas yang Didapat
-                            </p>
-                            <h3 className="text-[32px] md:text-[32px] font-bold text-black leading-snug">
+                            </h2>
+                            <h3 className="text-[32px] font-bold text-gray-900 leading-snug">
                                 Karena Belajar Butuh <br />Lingkungan yang Mendukung.
                             </h3>
                         </div>
 
-                        {/* Bagian Kanan */}
-                        <div className="md:w-1/2">
-                            <ol className="list-decimal pl-5 space-y-2 text-gray-800 text-[16px] leading-relaxed">
+                        {/* Konten Bagian Kanan */}
+                        <div className="md:w-[55%]">
+                            <ol className="list-decimal pl-5 space-y-1 text-gray-700 text-[16px] leading-relaxed w-full">
                                 <li>Setiap peserta magang akan mendapatkan bimbingan langsung dari tim internal yang berpengalaman.</li>
                                 <li>Disediakan sesi pengembangan keterampilan tambahan yang dapat diikuti secara sukarela di luar jam kerja reguler.</li>
                                 <li>Peserta akan memperoleh sertifikat magang serta seragam resmi dari MagangJogja.com sebagai bukti keikutsertaan.</li>
@@ -216,9 +217,10 @@ const Internship = () => {
                     </div>
                 </Container>
             </div>
+
             {/* Banner Section */}
             <Container>
-                <div className="relative h-[380px] py-5" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
+                <div className="relative h-[360px] mt-[64px] mb-[64px]" >
                     {/* Banner Box */}
                     <div className="relative w-full h-[320px] rounded-2xl overflow-hidden bg-white shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
                         {/* Layer merah kiri */}
