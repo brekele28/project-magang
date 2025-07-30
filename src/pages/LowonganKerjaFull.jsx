@@ -1,4 +1,6 @@
+import { useLocation } from "react-router-dom";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
 import Footer from "../components/Footer";
 import Container from "../components/Container";
@@ -103,7 +105,9 @@ const allJobs = {
 };
 
 const LowonganKerjaFull = () => {
-    const [currentPage, setCurrentPage] = useState(1);
+    const location = useLocation();
+    const initialPage = location.state?.currentPage || 1;
+    const [currentPage, setCurrentPage] = useState(initialPage);
     const jobs = allJobs[currentPage];
     return (
         <Layout>
@@ -152,12 +156,15 @@ const LowonganKerjaFull = () => {
                                         <h3 className="text-[24px] font-bold text-gray-900">{job.title}</h3>
                                         <p className="text-[16px] text-[#7B7B7B]">{job.company}</p>
                                     </div>
-                                    <button
-                                        className="bg-[#DC3933] hover:bg-red-500 text-white rounded-full cursor-pointer"
+
+                                    <Link
+                                        to="/syarat-loker"
+                                        state={{ job, currentPage }}   // kirim juga currentPage
+                                        className="bg-[#DC3933] hover:bg-red-500 text-white rounded-full cursor-pointer flex items-center justify-center"
                                         style={{ width: "245px", height: "63px" }}
                                     >
                                         Selengkapnya
-                                    </button>
+                                    </Link>
                                 </div>
 
                                 {/* Bagian Bawah */}
@@ -205,8 +212,8 @@ const LowonganKerjaFull = () => {
                                             <button
                                                 onClick={() => setCurrentPage(page)}
                                                 className={`flex items-center justify-center px-4 h-10 leading-tight border border-gray-300 cursor-pointer ${currentPage === page
-                                                        ? "bg-gray-800 text-white"
-                                                        : "bg-white text-black hover:bg-gray-100 hover:text-gray-700"
+                                                    ? "bg-gray-800 text-white"
+                                                    : "bg-white text-black hover:bg-gray-100 hover:text-gray-700"
                                                     }`}
                                             >
                                                 {page}
