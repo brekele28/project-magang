@@ -193,7 +193,7 @@ const LowonganKerja = () => {
                         <div className="flex justify-center">
                             <Link to="/lowongan-full">
                                 <button
-                                    className="border border-gray-300 rounded-full text-gray-800 font-medium cursor-pointer"
+                                    className="border border-gray-300 rounded-full text-gray-800 font-medium cursor-pointer hover:bg-black hover:text-white"
                                     style={{ width: "515px", height: "63px", fontSize: "20px" }}
                                 >
                                     Lihat Lebih Lanjut

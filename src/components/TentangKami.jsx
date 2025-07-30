@@ -10,7 +10,7 @@ const TentangKami = () => {
         setLoading(true); // aktifkan loading
         setTimeout(() => {
             navigate("/tentang-kami"); // pindah ke halaman tentang-kami
-        }, 1000); // setelah 3 detik
+        }, 1000); // setelah 1 detik
     };
 
     return (
@@ -33,10 +33,16 @@ const TentangKami = () => {
                         dan manfaat nyata bagi masyarakat melalui berbagai layanan yang ditawarkan.
                     </p>
 
+                    {/* Tombol Button */}
                     <button
                         onClick={handleClick}
                         disabled={loading}
-                        className="btn btn-outline text-black rounded-4xl font-medium text-[16px] px-6 py-6 border border-gray-200 hover:bg-neutral hover:text-white transition-all duration-200 shadow-none flex items-center justify-center gap-2 w-[220px] h-[56px]" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true"
+                        className={`btn btn-outline text-black rounded-4xl font-medium text-[16px] px-6 py-6 border border-gray-200 hover:bg-neutral hover:text-white transition-colors duration-200 shadow-none flex items-center justify-center gap-2 w-[220px] h-[56px]`}
+                        {...(!loading && {
+                            "data-aos": "fade-up",
+                            "data-aos-duration": "1000",
+                            "data-aos-once": "true",
+                        })}
                     >
                         {loading ? (
                             <div className="flex items-center justify-center gap-2 w-full">

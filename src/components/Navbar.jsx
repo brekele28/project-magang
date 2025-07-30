@@ -70,7 +70,7 @@ const Navbar = () => {
                                 </div>
                             )}
                         </li>
-                        <li className="hover:text-blue-600 cursor-pointer">Kontak</li>
+                        <Link to="/kontak" className="hover:text-blue-600 cursor-pointer">Kontak</Link>
                     </ul>
                 </nav>
             </Container>
