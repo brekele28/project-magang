@@ -2,6 +2,22 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
+
+// admin
+import AdminApp from "./admin/AdminApp.jsx";
+import AdminTentangKamiFull from "./admin/Page/TentangKamiFull.jsx";
+import AdminBisnisKamiFull from "./admin/Page/BisnisKamiFull.jsx";
+import AdminBerita from "./admin/Page/Berita.jsx";
+import AdminKontakFull from "./admin/Page/KontakFull.jsx";
+import AdminLowonganKerja from "./admin/Page/LowonganKerja.jsx";
+import AdminLowonganKerjaFull from "./admin/Page/LowonganKerjaFull.jsx";
+import AdminInternship from "./admin/Page/Internship.jsx";
+import AdminSyaratLoker from "./admin/Page/SyaratLoker.jsx";
+import AdminIsiBerita from "./admin/Page/IsiBerita.jsx";
+import AdminProfil from "./admin/settings/Profil.jsx";
+import AdminDashboard from "./admin/home/EditNavbar.jsx";
+
+// user
 import App from "./App.jsx";
 import TentangKamiFull from "./pages/TentangKamiFull.jsx";
 import BisnisKamiFull from "./pages/BisnisKamiFull.jsx";
@@ -13,17 +29,23 @@ import Berita from "./pages/Berita.jsx";
 import SyaratLoker from "./pages/SyaratLoker.jsx";
 import IsiBerita from "./pages/IsiBerita.jsx";
 
+// halaman Login Admin
+import LoginAdmin from "./masuk/LoginAdmin.jsx";
+
+// Admin (Dilindungi dengan ProtectedRouteAdmin)
+import ProtectedRouteAdmin from "./components/ProtectedRouteAdmin.jsx";
+
 import "remixicon/fonts/remixicon.css";
 import 'animate.css';
 import AOS from 'aos';
-import 'aos/dist/aos.css'; // You can also use <link> for styles
-// ..
+import 'aos/dist/aos.css';
 AOS.init();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
+        {/* Route User */}
         <Route path="/" element={<App />} />
         <Route path="/tentang-kami" element={<TentangKamiFull />} />
         <Route path="/bisnis-kami" element={<BisnisKamiFull />} />
@@ -34,6 +56,107 @@ createRoot(document.getElementById("root")).render(
         <Route path="/berita" element={<Berita />} />
         <Route path="/isi-berita" element={<IsiBerita />} />
         <Route path="/syarat-loker" element={<SyaratLoker />} />
+
+        {/* Route Admin (Dilindungi dengan ProtectedRouteAdmin) */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminApp />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/tentang-kami"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminTentangKamiFull />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/bisnis-kami"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminBisnisKamiFull />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/berita"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminBerita />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/kontak"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminKontakFull />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/lowongan-kerja"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminLowonganKerja />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/lowongan-full"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminLowonganKerjaFull />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/internship"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminInternship />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/syarat-loker"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminSyaratLoker />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/isi-berita"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminIsiBerita />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/profil"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminProfil />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminDashboard />
+            </ProtectedRouteAdmin>
+          }
+        />
+
+        {/* Route Login Admin */}
+        <Route path="/admin-login" element={<LoginAdmin />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>

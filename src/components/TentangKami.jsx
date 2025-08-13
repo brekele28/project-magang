@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Container from './Container';
+import Container from "./Container";
 
 const TentangKami = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleClick = () => {
-        setLoading(true); // aktifkan loading
+        setLoading(true);
         setTimeout(() => {
-            navigate("/tentang-kami"); // pindah ke halaman tentang-kami
-        }, 1000); // setelah 1 detik
+            navigate("/tentang-kami");
+            window.scrollTo({ top: 0, left: 0, behavior: "auto" }); // mulai dari atas
+        }, 1000);
     };
 
     return (
@@ -21,37 +22,60 @@ const TentangKami = () => {
                     <h3 className="text-[20px] tracking-[0.43em] uppercase font-normal text-black mb-[21px]">
                         Tentang Kami
                     </h3>
-                    <h2 className="text-[32px] font-bold text-black mb-[21px] leading-snug max-w-[700px] tracking-[-0.01em]" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
+
+                    <h2
+                        className="text-[32px] font-bold text-black mb-[21px] leading-snug max-w-[700px] tracking-[-0.01em]"
+                        data-aos="fade-up"
+                        data-aos-duration="1000"
+                        data-aos-once="true"
+                    >
                         Dari Ide Menjadi Karya Demi Kemajuan Bersama
                     </h2>
+
                     <p
-                        className="text-black text-[16px] tracking-[-0.01em] leading-[1.5] mb-[52px] max-w-[631px] text-justify" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true"
+                        className="text-black text-[16px] tracking-[-0.01em] leading-[1.5] mb-[52px] max-w-[631px] text-justify"
+                        data-aos="fade-up"
+                        data-aos-duration="1000"
+                        data-aos-once="true"
                     >
-                        Seven Inc. berasal dari kata Seven, yang dalam bahasa Jawa berarti “Pitu”,
-                        yang juga memiliki makna “Pitulungan” atau Pertolongan. Nama ini dipilih
-                        sebagai wujud komitmen perusahaan untuk senantiasa memberikan dukungan
-                        dan manfaat nyata bagi masyarakat melalui berbagai layanan yang ditawarkan.
+                        Seven Inc. berasal dari kata Seven, yang dalam bahasa Jawa berarti
+                        “Pitu”, yang juga memiliki makna “Pitulungan” atau Pertolongan.
+                        Nama ini dipilih sebagai wujud komitmen perusahaan untuk senantiasa
+                        memberikan dukungan dan manfaat nyata bagi masyarakat melalui
+                        berbagai layanan yang ditawarkan.
                     </p>
 
-                    {/* Tombol Button */}
+                    {/* Tombol dengan animasi merah dari kiri ke kanan */}
                     <button
                         onClick={handleClick}
                         disabled={loading}
-                        className={`btn btn-outline text-black rounded-4xl font-medium text-[16px] px-6 py-6 border border-gray-200 hover:bg-neutral hover:text-white transition-colors duration-200 shadow-none flex items-center justify-center gap-2 w-[220px] h-[56px]`}
+                        className={`relative overflow-hidden group rounded-4xl font-medium text-[16px] border border-gray-200 text-black w-[220px] h-[56px] transition-all duration-300 cursor-pointer ${loading ? "" : "hover:text-white"
+                            }`}
                         {...(!loading && {
                             "data-aos": "fade-up",
                             "data-aos-duration": "1000",
                             "data-aos-once": "true",
                         })}
                     >
-                        {loading ? (
-                            <div className="flex items-center justify-center gap-2 w-full">
-                                <span className="loading loading-spinner"></span>
-                                loading
-                            </div>
-                        ) : (
-                            "Baca Selengkapnya"
-                        )}
+                        {/* Efek background merah dari kiri ke kanan */}
+                        <span className="absolute inset-0 bg-red-600 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500 ease-in-out z-0" />
+
+                        {/* Isi tombol */}
+                        <span
+                            className={`relative z-10 flex items-center justify-center h-full w-full gap-2 text-center ${loading ? "text-white" : ""
+                                }`}
+                            aria-busy={loading}
+                            aria-live="polite"
+                        >
+                            {loading ? (
+                                <>
+                                    <span className="loading loading-spinner text-white"></span>
+                                    loading
+                                </>
+                            ) : (
+                                "Baca Selengkapnya"
+                            )}
+                        </span>
                     </button>
                 </div>
 
@@ -60,7 +84,9 @@ const TentangKami = () => {
                     <img
                         src="/assets/img/Tempat.png"
                         alt="Tentang Kami"
-                        className="max-w-[584px] h-[447px] w-full object-cover" data-aos="fade-up" data-aos-duration="1000"
+                        className="max-w-[584px] h-[447px] w-full object-cover"
+                        data-aos="fade-up"
+                        data-aos-duration="1000"
                         data-aos-once="true"
                     />
                 </div>
