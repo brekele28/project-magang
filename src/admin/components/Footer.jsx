@@ -70,11 +70,6 @@ const Footer = () => {
                                     Kontak
                                 </Link>
                             </li>
-                            <li>
-                                <Link to="/admin-login" className="hover:text-[#DC3933] hover:underline">
-                                    Login Admin
-                                </Link>
-                            </li>
                         </ul>
                     </div>
 
