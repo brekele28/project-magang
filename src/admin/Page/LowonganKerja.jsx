@@ -4,6 +4,18 @@ import Layout from "../components/Layout";
 import Footer from "../components/Footer";
 import Container from "../components/Container";
 
+// === KONFIG API (Hero Lowongan Kerja)
+const API_BASE = "http://127.0.0.1:8000/api";
+const ENDPOINT_WORKS_LATEST = `${API_BASE}/works/latest`;
+
+// === Fallback Hero (dipakai kalau API kosong/error)
+const FALLBACK_HERO = {
+    kicker: "Lowongan Kerja",
+    title: "Berkarir bersama \n Seven INC.",
+    subtitle: "Temukan peluang karir Anda dengan posisi yang sesuai.",
+    image_url: "/assets/img/cardLoker.png",
+};
+
 const CardArray = [
     { title: "Integritas", styleType: 1, description: "Sikap dasar setiap insan Seven INC. untuk selaras antara pikiran, ucapan, dan tindakan, menjaga kejujuran, tanggung jawab, serta kerahasiaan sesuai visi dan amanah perusahaan.", image: "/assets/img/vectorSalaman.png" },
     { title: "Positive Vibe", styleType: 2, description: "Menciptakan lingkungan kerja yang suportif melalui sikap positif, penyampaian informasi yang membangun, serta menghindari gosip dan prasangka yang merugikan tim.", image: "/assets/img/vectorPerson.png" },
@@ -23,6 +35,48 @@ const CARD_GAP = 52;
 const VISIBLE = 2;
 
 const LowonganKerja = () => {
+    // ===== Data dari API =====
+    const [hero, setHero] = useState(null);
+    const [loaded, setLoaded] = useState(false);
+
+    // Helper untuk render judul dengan line-break "\n"
+    const renderWithBreaks = (text) =>
+        String(text || "")
+            .split(/\n/)
+            .map((part, i) => (
+                <span key={i}>
+                    {i > 0 && <br />}
+                    {part}
+                </span>
+            ));
+
+    useEffect(() => {
+        let aborted = false;
+        (async () => {
+            try {
+                const res = await fetch(ENDPOINT_WORKS_LATEST, { cache: "no-store" });
+                if (!res.ok) throw new Error("not 200");
+                const json = await res.json();
+                const d = json?.data;
+                if (!aborted && d) {
+                    setHero({
+                        kicker: d.heading || FALLBACK_HERO.kicker,
+                        title: d.title || FALLBACK_HERO.title,
+                        subtitle: d.subtitle || FALLBACK_HERO.subtitle,
+                        image_url: d.hero_url || FALLBACK_HERO.image_url,
+                    });
+                } else if (!aborted) {
+                    setHero(FALLBACK_HERO);
+                }
+            } catch {
+                if (!aborted) setHero(FALLBACK_HERO);
+            } finally {
+                if (!aborted) setLoaded(true);
+            }
+        })();
+        return () => { aborted = true; };
+    }, []);
+
     // index awal kartu yang ditampilkan (kiri)
     const [startIndex, setStartIndex] = useState(0);
     const isFirst = startIndex === 0;
@@ -83,13 +137,13 @@ const LowonganKerja = () => {
     // 👉 handler "Selengkapnya"
     // kirim juga from: "/lowongan-kerja" agar tombol Kembali di SyaratLoker bisa balik ke sini
     const handleSeeDetail = (job) => {
-        navigate("/syarat-loker", { state: { job, from: "/lowongan-kerja", currentPage: 1 } });
+        navigate("/admin/syarat-loker", { state: { job, from: "/admin/lowongan-kerja", currentPage: 1 } });
         scrollToTopNextTick();
     };
 
     // handler "Lihat Lebih Lanjut"
     const handleSeeMore = () => {
-        navigate("/lowongan-full", { state: { from: "/lowongan-full" } });
+        navigate("/admin/lowongan-full", { state: { from: "/admin/lowongan-full" } });
         scrollToTopNextTick();
     };
 
@@ -101,20 +155,39 @@ const LowonganKerja = () => {
         <Layout>
             <div className="bg-white text-gray-800 pt-[130px] pb-24">
                 <Container>
-                    {/* Hero Section */}
-                    <div className="flex flex-col md:flex-row md:items-center justify-between">
-                        {/* Konten Kiri */}
-                        <div className="w-full md:w-[58%]">
-                            <h3 className="text-[20px] tracking-[0.46em] uppercase text-gray-700 mb-3 font-regular">Lowongan Kerja</h3>
-                            <h1 className="text-[36px] md:text-[40px] font-bold text-gray-900 leading-snug mb-4">Berkarir bersama <br /> Seven INC.</h1>
-                            <p className="text-[16px] text-gray-600 leading-relaxed">Temukan peluang karir Anda dengan posisi yang sesuai.</p>
-                        </div>
+                    {/* Tahan render hero hingga fetch selesai untuk cegah kedipan */}
+                    {!loaded ? (
+                        <div className="h-[560px] animate-pulse bg-gray-50 rounded-xl mb-6" />
+                    ) : (
+                        <>
+                            {/* Hero Section */}
+                            <div className="flex flex-col md:flex-row md:items-center justify-between">
+                                {/* Konten Kiri */}
+                                <div className="w-full md:w-[58%]">
+                                    <h3 className="text-[20px] tracking-[0.46em] uppercase text-gray-700 mb-3 font-regular">
+                                        {hero.kicker}
+                                    </h3>
 
-                        {/* Konten Kanan (Gambar) */}
-                        <div className="w-full flex justify-end">
-                            <img src="/assets/img/cardLoker.png" alt="Lowongan Kerja" className="max-w-[679px] h-[453px] w-full object-cover" />
-                        </div>
-                    </div>
+                                    <h1 className="text-[36px] md:text-[40px] font-bold text-gray-900 leading-snug mb-4">
+                                        {renderWithBreaks(hero.title)}
+                                    </h1>
+
+                                    <p className="text-[16px] text-gray-600 leading-relaxed">
+                                        {hero.subtitle}
+                                    </p>
+                                </div>
+
+                                {/* Konten Kanan (Gambar) */}
+                                <div className="w-full flex justify-end">
+                                    <img
+                                        src={hero.image_url || "/assets/img/cardLoker.png"}
+                                        alt="Lowongan Kerja"
+                                        className="max-w-[679px] h-[453px] w-full object-cover"
+                                    />
+                                </div>
+                            </div>
+                        </>
+                    )}
 
                     {/* Core Value Section (fungsi & tampilan dari TentangKamiFull) */}
                     <div className="mt-24 flex flex-col md:flex-row justify-between gap-10">

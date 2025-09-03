@@ -1,9 +1,36 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Container from "./Container";
-import { Link } from "react-router-dom";
+import Container from './Container';
+import { Link } from 'react-router-dom';
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8000/api";
+const businessLines = [
+    {
+        name: "Seven Tech",
+        image: "/assets/img/card.png",
+        dad: "100",
+        description:
+            "Seven Tech menaungi lini usaha di bidang teknologi digital, pengembangan website, desain digital, serta layanan konsultasi bisnis berbasis platform.",
+    },
+    {
+        name: "Seven Style",
+        image: "/assets/img/card.png",
+        dad: "300",
+        description:
+            "Seven Style berfokus pada industri Fashion dan tekstil, menaungi brand clothing lokal berkualitas seperti Crows Denim, Alphawear, Grenade, hingga Tailor Jogja.com.",
+    },
+    {
+        name: "Seven Serve",
+        image: "/assets/img/card.png",
+        dad: "500",
+        description:
+            "Seven Serve menjadi payung usaha untuk berbagi layanan jasa yang mendukung kebutuhan masyarakat modern dari jasa kebersihan Rumah dan lain-lain.",
+    },
+    {
+        name: "Seven Edu",
+        image: "/assets/img/card.png",
+        dad: "700",
+        description:
+            "Seven Edu menjadi payung usaha untuk berbagi layanan jasa yang mendukung kebutuhan masyarakat modern dari jasa kebersihan Rumah dan lain-lain.",
+    },
+];
 
 // mapping anchor yang eksplisit biar aman
 const anchorMap = {
@@ -14,75 +41,6 @@ const anchorMap = {
 };
 
 const BisnisKami = () => {
-    const [data, setData] = useState({});
-    const [ver, setVer] = useState(Date.now());
-
-    const fetchData = async () => {
-        try {
-            const res = await axios.get(`${API_BASE}/bisnis-kami-full`);
-            setData(res.data || {});
-            setVer(Date.now());
-        } catch (err) {
-            console.error("Gagal memuat data /bisnis-kami-full", err);
-        }
-    };
-
-    useEffect(() => {
-        fetchData();
-        // refresh otomatis setelah admin menyimpan dari halaman editor
-        const onStorage = (e) => {
-            if (e.key === "BISNIS_KAMI_CHANGED") fetchData();
-        };
-        window.addEventListener("storage", onStorage);
-        return () => window.removeEventListener("storage", onStorage);
-    }, []);
-
-    // fallback teks default (hanya jika DB belum ada data)
-    const defaults = {
-        header_subtitle: "Lini Bisnis Kami",
-        header_title: "Satu Visi, Banyak Solusi",
-        seven_tech_title: "Seven Tech",
-        seven_tech_text:
-            "Seven Tech menaungi lini usaha di bidang teknologi digital, pengembangan website, desain digital, serta layanan konsultasi bisnis berbasis platform.",
-        seven_style_title: "Seven Style",
-        seven_style_text:
-            "Seven Style berfokus pada industri Fashion dan tekstil, menaungi brand clothing lokal berkualitas seperti Crows Denim, Alphawear, Grenade, hingga Tailor Jogja.com.",
-        seven_serve_title: "Seven Serve",
-        seven_serve_text:
-            "Seven Serve menjadi payung usaha untuk berbagi layanan jasa yang mendukung kebutuhan masyarakat modern dari jasa kebersihan Rumah dan lain-lain.",
-        seven_edu_title: "Seven Edu",
-        seven_edu_text:
-            "Seven Edu menjadi payung usaha untuk berbagi layanan jasa yang mendukung kebutuhan masyarakat modern dari jasa kebersihan Rumah dan lain-lain.",
-    };
-
-    // rakit konten kartu secara dinamis (gambar tetap)
-    const businessLines = [
-        {
-            name: data.seven_tech_title || defaults.seven_tech_title,
-            image: "/assets/img/card.png",
-            dad: "100",
-            description: data.seven_tech_text || defaults.seven_tech_text,
-        },
-        {
-            name: data.seven_style_title || defaults.seven_style_title,
-            image: "/assets/img/card.png",
-            dad: "300",
-            description: data.seven_style_text || defaults.seven_style_text,
-        },
-        {
-            name: data.seven_serve_title || defaults.seven_serve_title,
-            image: "/assets/img/card.png",
-            dad: "500",
-            description: data.seven_serve_text || defaults.seven_serve_text,
-        },
-        {
-            name: data.seven_edu_title || defaults.seven_edu_title,
-            image: "/assets/img/card.png",
-            dad: "700",
-            description: data.seven_edu_text || defaults.seven_edu_text,
-        },
-    ];
-
     return (
         <section className="w-full bg-white mt-[85px]">
             <Container>
@@ -94,7 +52,7 @@ const BisnisKami = () => {
                         data-aos-duration="1000"
                         data-aos-once="true"
                     >
-                        {data.header_subtitle || defaults.header_subtitle}
+                        Lini Bisnis Kami
                     </p>
                     <h2
                         className="text-[20px] md:text-[32px] font-bold text-gray-900"
@@ -102,7 +60,7 @@ const BisnisKami = () => {
                         data-aos-duration="1000"
                         data-aos-once="true"
                     >
-                        {data.header_title || defaults.header_title}
+                        Satu Visi, Banyak Solusi
                     </h2>
                 </div>
 
@@ -110,30 +68,25 @@ const BisnisKami = () => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-24">
                     {businessLines.map((item, index) => (
                         <div
-                            key={`${index}-${ver}`}
+                            key={index}
                             data-aos="fade-up"
                             data-aos-duration="1000"
                             data-aos-delay={item.dad}
                             data-aos-once="true"
                             className="group relative overflow-hidden bg-white rounded-xl border border-gray-200 shadow-[0_1px_6px_rgba(0,0,0,0.05)] w-[296px] h-[369px] flex items-center justify-center text-center mx-auto cursor-pointer transition duration-300"
                         >
-                            {/* Gambar yang membesar saat hover (tetap statis) */}
+                            {/* Gambar yang membesar saat hover */}
                             <img
                                 src={item.image}
                                 alt={item.name}
-                                className={`absolute ${item.name === (data.seven_tech_title || defaults.seven_tech_title)
-                                        ? "top-[51%]"
-                                        : "top-1/2"
-                                    } left-1/2 -translate-x-1/2 -translate-y-1/2 w-[145px] h-[145px] object-contain transition-all duration-500 ease-in-out group-hover:scale-[2] group-hover:opacity-10`}
+                                className={`absolute ${item.name === "Seven Tech" ? "top-[51%]" : "top-1/2"} left-1/2 -translate-x-1/2 -translate-y-1/2 w-[145px] h-[145px] object-contain transition-all duration-500 ease-in-out group-hover:scale-[2] group-hover:opacity-10`}
                             />
 
                             {/* Konten utama */}
                             <div className="relative z-10 flex flex-col items-center justify-center w-full h-full px-4 text-left">
                                 {/* Judul */}
                                 <p
-                                    className={`text-[20px] font-bold text-gray-800 mt-115 transition-all duration-500 ease-in-out group-hover:mt-[-10px] ${item.name === (data.seven_tech_title || defaults.seven_tech_title)
-                                            ? "relative top-[-10px]"
-                                            : ""
+                                    className={`text-[20px] font-bold text-gray-800 mt-115 transition-all duration-500 ease-in-out group-hover:mt-[-10px] ${item.name === "Seven Tech" ? "relative top-[-10px]" : ""
                                         }`}
                                 >
                                     {item.name}
@@ -143,12 +96,10 @@ const BisnisKami = () => {
                                 <div className="opacity-0 group-hover:opacity-100 transition-all duration-700 delay-200 mt-4 text-[18px] text-gray-700 leading-relaxed text-justify pointer-events-none group-hover:pointer-events-auto">
                                     <p className="font-normal mb-4">{item.description}</p>
 
-                                    {/* Link ke halaman full + anchor (admin view sesuai strukturmu) */}
+                                    {/* Link ke halaman full + anchor */}
                                     <Link
-                                        to={`/admin/bisnis-kami#${anchorMap[item.name] || "seven-tech"}`}
-                                        className={`flex items-center gap-1 font-bold text-red-600 hover:text-black transition duration-300 ${item.name === (data.seven_tech_title || defaults.seven_tech_title)
-                                                ? "relative top-[20px]"
-                                                : ""
+                                        to={`/admin/bisnis-kami#${anchorMap[item.name]}`}
+                                        className={`flex items-center gap-1 font-bold text-red-600 hover:text-black transition duration-300 ${item.name === "Seven Tech" ? "relative top-[20px]" : ""
                                             }`}
                                     >
                                         Baca Selengkapnya
@@ -161,7 +112,7 @@ const BisnisKami = () => {
                 </div>
             </Container>
 
-            {/* Banner Section (tetap) */}
+            {/* Banner Section */}
             <Container>
                 <div
                     className="relative h-[380px] py-5"
@@ -169,8 +120,12 @@ const BisnisKami = () => {
                     data-aos-duration="1000"
                     data-aos-once="true"
                 >
+                    {/* Banner Box */}
                     <div className="relative w-full h-[320px] rounded-2xl overflow-hidden bg-white shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
+                        {/* Layer merah kiri */}
                         <div className="absolute top-0 left-0 h-full w-[810px] bg-[#D43026] z-0" />
+
+                        {/* Chevron Arrows */}
                         <img
                             src="/assets/img/Chevron.png"
                             alt="Chevron Arrows"
@@ -180,6 +135,8 @@ const BisnisKami = () => {
                             data-aos-duration="1000"
                             data-aos-once="true"
                         />
+
+                        {/* Text + Button */}
                         <div className="absolute top-1/2 left-[100px] -translate-y-1/2 z-20 text-white">
                             <p
                                 className="uppercase tracking-[0.4em] text-[20px] font-medium mb-4"
@@ -213,6 +170,7 @@ const BisnisKami = () => {
                         </div>
                     </div>
 
+                    {/* Gambar Orang */}
                     <img
                         src="/assets/img/Hero2.png"
                         alt="Business Person"

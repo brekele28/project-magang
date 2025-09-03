@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
+import "cally";
 
 // admin
 import AdminApp from "./admin/AdminApp.jsx";
@@ -16,6 +17,11 @@ import AdminSyaratLoker from "./admin/Page/SyaratLoker.jsx";
 import AdminIsiBerita from "./admin/Page/IsiBerita.jsx";
 import AdminProfil from "./admin/settings/Profil.jsx";
 import AdminDashboard from "./admin/home/EditNavbar.jsx";
+import AdminEditTentangKami from "./admin/home/EditTentangKami.jsx";
+import AdminEditTentangKamiFull from "./admin/home/EditTentangKamiFull.jsx";
+import AdminEditBerita from "./admin/home/EditBerita.jsx";
+import AdminEditLowonganKerja from "./admin/home/EditLowonganKerja.jsx";
+import AdminEditBisnisKami from "./admin/home/EditBisnisKami.jsx";
 
 // user
 import App from "./App.jsx";
@@ -151,6 +157,46 @@ createRoot(document.getElementById("root")).render(
           element={
             <ProtectedRouteAdmin>
               <AdminDashboard />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/edit-info"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminEditTentangKami />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/edit-info-full"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminEditTentangKamiFull />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/edit-berita"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminEditBerita />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/edit-loker"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminEditLowonganKerja />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/edit-bisnis-kami"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminEditBisnisKami />
             </ProtectedRouteAdmin>
           }
         />
