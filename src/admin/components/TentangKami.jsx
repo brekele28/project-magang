@@ -1,18 +1,78 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import Container from "./Container";
+
+// helper: bentuk array dari struktur legacy backend (image_url1..3)
+const fromLegacy = (d) => [d?.image_url1, d?.image_url2, d?.image_url3].filter(Boolean);
 
 const TentangKami = () => {
     const [loading, setLoading] = useState(false);
+
+    // ambil cache yang sama dengan TentangKamiFull.jsx agar konsisten & cepat muncul
+    const cached = useMemo(() => {
+        try {
+            return JSON.parse(localStorage.getItem("about.cache") || "null");
+        } catch {
+            return null;
+        }
+    }, []);
+
+    const [about, setAbout] = useState(cached || null);
+
+    // gambar hero kanan untuk landing (pakai gambar pertama dari array legacy)
+    const initialHero =
+        (fromLegacy(cached)[0] ? fromLegacy(cached)[0] : "/assets/img/Tempat.png");
+
+    const [heroImg, setHeroImg] = useState(initialHero);
+
+    // refresh data terbaru (format legacy yang sama)
+    useEffect(() => {
+        let alive = true;
+        const getAbout = async () => {
+            try {
+                const res = await axios.get("http://127.0.0.1:8000/api/about", {
+                    headers: { Accept: "application/json" },
+                });
+                const data = res.data?.data;
+                if (!alive || !data) return;
+
+                setAbout(data);
+
+                const urls = fromLegacy(data);
+                setHeroImg(urls[0] || "/assets/img/Tempat.png");
+
+                // simpan cache apa adanya (biar sinkron dengan halaman penuh)
+                localStorage.setItem("about.cache", JSON.stringify(data));
+            } catch {
+                // diamkan: fallback ke cache / default
+            }
+        };
+        getAbout();
+        return () => {
+            alive = false;
+        };
+    }, []);
+
     const navigate = useNavigate();
 
     const handleClick = () => {
         setLoading(true);
         setTimeout(() => {
             navigate("/admin/tentang-kami");
-            window.scrollTo({ top: 0, left: 0, behavior: "auto" }); // mulai dari atas
+            window.scrollTo({ top: 0, left: 0, behavior: "auto" });
         }, 1000);
     };
+
+    // pilih paragraf ringkas untuk landing (ambil yang pertama tersedia)
+    const landingParagraph =
+        (about?.intro_paragraph && String(about.intro_paragraph)) ||
+        (about?.left_paragraphs?.[0] && String(about.left_paragraphs[0])) ||
+        (about?.right_paragraphs?.[0] && String(about.right_paragraphs[0])) ||
+        `Seven Inc. berasal dari kata Seven, yang dalam bahasa Jawa berarti “Pitu”, 
+     yang juga memiliki makna “Pitulungan” atau Pertolongan. Nama ini dipilih 
+     sebagai wujud komitmen perusahaan untuk senantiasa memberikan dukungan 
+     dan manfaat nyata bagi masyarakat melalui berbagai layanan yang ditawarkan.`;
 
     return (
         <section className="bg-white mt-[85px]">
@@ -20,7 +80,7 @@ const TentangKami = () => {
                 {/* Kiri: Teks */}
                 <div>
                     <h3 className="text-[20px] tracking-[0.43em] uppercase font-normal text-black mb-[21px]">
-                        Tentang Kami
+                        {about?.subtitle ?? "Tentang Kami"}
                     </h3>
 
                     <h2
@@ -29,7 +89,7 @@ const TentangKami = () => {
                         data-aos-duration="1000"
                         data-aos-once="true"
                     >
-                        Dari Ide Menjadi Karya Demi Kemajuan Bersama
+                        {about?.headline ?? "Dari Ide Menjadi Karya Demi Kemajuan Bersama"}
                     </h2>
 
                     <p
@@ -38,11 +98,7 @@ const TentangKami = () => {
                         data-aos-duration="1000"
                         data-aos-once="true"
                     >
-                        Seven Inc. berasal dari kata Seven, yang dalam bahasa Jawa berarti
-                        “Pitu”, yang juga memiliki makna “Pitulungan” atau Pertolongan.
-                        Nama ini dipilih sebagai wujud komitmen perusahaan untuk senantiasa
-                        memberikan dukungan dan manfaat nyata bagi masyarakat melalui
-                        berbagai layanan yang ditawarkan.
+                        {landingParagraph}
                     </p>
 
                     {/* Tombol dengan animasi merah dari kiri ke kanan */}
@@ -82,12 +138,17 @@ const TentangKami = () => {
                 {/* Kanan: Gambar */}
                 <div className="md:w-1/2 flex justify-end animate__animated animate__fadeInUp animate__delay-1s">
                     <img
-                        src="/assets/img/Tempat.png"
+                        src={heroImg}
                         alt="Tentang Kami"
-                        className="max-w-[584px] h-[447px] w-full object-cover"
+                        className="max-w-[584px] h-[447px] w-full object-cover rounded-2xl"
                         data-aos="fade-up"
                         data-aos-duration="1000"
                         data-aos-once="true"
+                        onError={(e) => {
+                            e.currentTarget.src = "/assets/img/Tempat.png";
+                        }}
+                        loading="eager"
+                        decoding="async"
                     />
                 </div>
             </Container>

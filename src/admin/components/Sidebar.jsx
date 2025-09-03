@@ -54,12 +54,12 @@ const Sidebar = () => {
                         {isTentangKamiOpen && (
                             <ul className="pl-8 space-y-2">
                                 <li>
-                                    <Link to="/admin/tentang-kami" className={menuItemClasses("/admin/tentang-kami")}>
+                                    <Link to="/admin/edit-info" className={menuItemClasses("/admin/edit-info")}>
                                         Konten Utama
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to="/admin/tentang-kami" className={menuItemClasses("/admin/tentang-kami")}>
+                                    <Link to="/admin/edit-info-full" className={menuItemClasses("/admin/edit-info-full")}>
                                         Konten Lengkap
                                     </Link>
                                 </li>
@@ -84,13 +84,8 @@ const Sidebar = () => {
                         {isBisnisOpen && (
                             <ul className="pl-8 space-y-2">
                                 <li>
-                                    <Link to="/admin/bisnis-kami" className={menuItemClasses("/admin/bisnis-kami")}>
+                                    <Link to="/admin/edit-bisnis-kami" className={menuItemClasses("/admin/edit-bisnis-kami")}>
                                         Konten Utama
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/admin/bisnis-kami" className={menuItemClasses("/admin/bisnis-kami")}>
-                                        Konten Lengkap
                                     </Link>
                                 </li>
                             </ul>
@@ -114,17 +109,18 @@ const Sidebar = () => {
                         {isBeritaOpen && (
                             <ul className="pl-8 space-y-2">
                                 <li>
-                                    <Link to="/admin/berita" className={menuItemClasses("/admin/berita")}>
+                                    <Link to="/admin/edit-berita" className={menuItemClasses("/admin/edit-berita")}>
                                         Konten Utama
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/admin/berita" className={menuItemClasses("/admin/berita")}>
-                                        Konten Lengkap
                                     </Link>
                                 </li>
                             </ul>
                         )}
+                    </li>
+                    <li>
+                        <Link to="/admin/edit-loker" className={menuItemClasses("/admin/edit-loker")}>
+                            <i className="ri-user-settings-line text-[20px]" />
+                            <span className="ms-3">Lowongan Kerja</span>
+                        </Link>
                     </li>
                 </ul>
             </div>

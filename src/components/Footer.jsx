@@ -2,6 +2,11 @@ import { Link } from "react-router-dom";
 import Container from "./Container";
 
 const Footer = () => {
+    // Fungsi saat click supaya konten dimulai dari atas
+    const scrollTop = () => {
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    };
+
     return (
         <footer className="bg-[#BDBDBD] text-white pb-3">
             <Container>
@@ -46,32 +51,32 @@ const Footer = () => {
                         <h3 className="text-[30px] font-bold mb-3 ml-20">Links</h3>
                         <ul className="space-y-2 ml-20 text-[16px]">
                             <li>
-                                <Link to="/" className="hover:text-[#DC3933] hover:underline">
+                                <Link to="/" onClick={scrollTop} className="hover:text-[#DC3933] cursor-pointer">
                                     Beranda
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/tentang-kami" className="hover:text-[#DC3933] hover:underline">
+                                <Link to="/tentang-kami" onClick={scrollTop} className="hover:text-[#DC3933] cursor-pointer">
                                     Tentang Kami
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/bisnis-kami" className="hover:text-[#DC3933] hover:underline">
+                                <Link to="/bisnis-kami" onClick={scrollTop} className="hover:text-[#DC3933] cursor-pointer">
                                     Bisnis Kami
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/berita" className="hover:text-[#DC3933] hover:underline">
+                                <Link to="/berita" onClick={scrollTop} className="hover:text-[#DC3933] cursor-pointer">
                                     Berita
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/kontak" className="hover:text-[#DC3933] hover:underline">
+                                <Link to="/kontak" onClick={scrollTop} className="hover:text-[#DC3933] cursor-pointer">
                                     Kontak
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/admin-login" className="hover:text-[#DC3933] hover:underline">
+                                <Link to="/admin-login" onClick={scrollTop} className="hover:text-[#DC3933] cursor-pointer">
                                     Login Admin
                                 </Link>
                             </li>
@@ -82,10 +87,38 @@ const Footer = () => {
                     <div>
                         <h3 className="text-[30px] font-bold mb-3 ml-6">Bisnis Kami</h3>
                         <ul className="space-y-2 ml-6 text-[16px]">
-                            <li>Seven Tech</li>
-                            <li>Seven Style</li>
-                            <li>Seven Edu</li>
-                            <li>Seven Serve</li>
+                            <li>
+                                <Link
+                                    to="/bisnis-kami#seven-tech"
+                                    className="hover:text-[#DC3933]"
+                                >
+                                    Seven Tech
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    to="/bisnis-kami#seven-style"
+                                    className="hover:text-[#DC3933]"
+                                >
+                                    Seven Style
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    to="/bisnis-kami#seven-serve"
+                                    className="hover:text-[#DC3933]"
+                                >
+                                    Seven Serve
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    to="/bisnis-kami#seven-edu"
+                                    className="hover:text-[#DC3933]"
+                                >
+                                    Seven Edu
+                                </Link>
+                            </li>
                         </ul>
                     </div>
 

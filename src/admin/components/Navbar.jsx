@@ -1,19 +1,27 @@
 import { Link, useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Container from "./Container";
+
+const DEFAULT_AVATAR = "https://img.daisyui.com/images/profile/demo/spiderperson@192.webp";
 
 const Navbar = () => {
     const [isSticky, setIsSticky] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
-    const [adminData, setAdminData] = useState(null);
 
-    // >>> ambil dari localStorage saat inisialisasi agar tidak flicker
+    // Ambil adminData dari localStorage sejak render pertama (anti-flicker)
+    const [adminData, setAdminData] = useState(() => {
+        try { return JSON.parse(localStorage.getItem("adminData") || "null"); }
+        catch { return null; }
+    });
+
+    // Logo navbar dicache agar tidak berkedip
     const [logoUrl, setLogoUrl] = useState(() => {
         return localStorage.getItem("navbarLogoUrl") || null;
     });
 
     const navigate = useNavigate();
+    const dropdownRef = useRef(null);
 
     // Sticky on scroll
     useEffect(() => {
@@ -22,10 +30,34 @@ const Navbar = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    // Ambil data admin dari localStorage
+    // Sinkron jika adminData berubah dari tab/halaman lain
     useEffect(() => {
-        const storedAdmin = localStorage.getItem("adminData");
-        if (storedAdmin) setAdminData(JSON.parse(storedAdmin));
+        const onStorage = (e) => {
+            if (e.key === "adminData") {
+                try { setAdminData(e.newValue ? JSON.parse(e.newValue) : null); }
+                catch { /* ignore */ }
+            }
+        };
+        window.addEventListener("storage", onStorage);
+        return () => window.removeEventListener("storage", onStorage);
+    }, []);
+
+    // Tutup dropdown saat klik di luar area atau tekan Esc
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+                setShowDropdown(false);
+            }
+        };
+        const handleKeyDown = (e) => {
+            if (e.key === "Escape") setShowDropdown(false);
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener("keydown", handleKeyDown);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("keydown", handleKeyDown);
+        };
     }, []);
 
     // Ambil logo navbar dari API, lalu cache di localStorage
@@ -33,29 +65,25 @@ const Navbar = () => {
         let alive = true;
         const getLogo = async () => {
             try {
-                const res = await axios.get("http://127.0.0.1:8000/api/admin/logo");
+                const res = await axios.get("http://127.0.0.1:8000/api/admin/logo", {
+                    headers: { Accept: "application/json" },
+                });
                 const url = res?.data?.data?.url || null;
                 if (!alive) return;
-
                 if (url) {
                     setLogoUrl(url);
-                    // cache agar halaman lain langsung pakai ini sejak render pertama
                     localStorage.setItem("navbarLogoUrl", url);
                 }
             } catch (e) {
-                // diamkan: kalau gagal, tetap pakai yang ada di localStorage/fallback
+                // abaikan error, pakai fallback logo default
             }
         };
         getLogo();
-        return () => {
-            alive = false;
-        };
+        return () => { alive = false; };
     }, []);
 
     // Scroll ke atas tiap klik menu
-    const scrollTop = () => {
-        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-    };
+    const scrollTop = () => window.scrollTo({ top: 0, left: 0, behavior: "auto" });
 
     // Logout
     const handleLogout = async () => {
@@ -75,6 +103,8 @@ const Navbar = () => {
         }
     };
 
+    const avatarSrc = adminData?.avatar || DEFAULT_AVATAR;
+
     return (
         <header
             className={`w-full h-[71px] z-50 backdrop-blur-md transition-all duration-300 ${isSticky ? "fixed top-0 bg-white/70 shadow-md" : "absolute top-0 bg-white/70"
@@ -83,20 +113,20 @@ const Navbar = () => {
             <Container className="h-full flex items-center justify-between">
                 {/* Logo */}
                 <div className="flex items-center">
-                    <img
-                        className="h-12 w-auto object-contain"
-                        // jika ada logoUrl (dari cache/DB) pakai itu; kalau null baru fallback
-                        src={logoUrl ?? "/assets/img/Logo.png"}
-                        alt="Logo SEVEN INC."
-                        // kalau URL dari DB rusak, jatuhkan ke fallback & bersihkan cache
-                        onError={(e) => {
-                            if (logoUrl) {
-                                localStorage.removeItem("navbarLogoUrl");
-                                setLogoUrl(null);
-                            }
-                            e.currentTarget.src = "/assets/img/Logo.png";
-                        }}
-                    />
+                    <Link to="/admin">
+                        <img
+                            className="h-12 w-auto object-contain cursor-pointer"
+                            src={logoUrl ?? "/assets/img/Logo.png"}
+                            alt="Logo SEVEN INC."
+                            onError={(e) => {
+                                if (logoUrl) {
+                                    localStorage.removeItem("navbarLogoUrl");
+                                    setLogoUrl(null);
+                                }
+                                e.currentTarget.src = "/assets/img/Logo.png";
+                            }}
+                        />
+                    </Link>
                 </div>
 
                 {/* Navigation Menu */}
@@ -125,8 +155,9 @@ const Navbar = () => {
 
                         {/* Dropdown Karir */}
                         <li
+                            ref={dropdownRef}
                             className="hover:text-[#DC3933] cursor-pointer flex items-center relative"
-                            onClick={() => setShowDropdown(!showDropdown)}
+                            onClick={() => setShowDropdown((v) => !v)}
                         >
                             Karir
                             <i
@@ -166,18 +197,15 @@ const Navbar = () => {
                             </Link>
                         </li>
 
-                        {/* Avatar */}
+                        {/* Avatar kanan */}
                         <li className="flex items-center">
                             <div className="dropdown dropdown-end">
                                 <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                                     <div className="ring-primary ring-offset-base-100 w-10 rounded-full ring-2 ring-offset-2">
                                         <img
-                                            src={
-                                                adminData?.avatar
-                                                    ? adminData.avatar
-                                                    : "https://img.daisyui.com/images/profile/demo/spiderperson@192.webp"
-                                            }
+                                            src={avatarSrc}
                                             alt="avatar"
+                                            onError={(e) => { e.currentTarget.src = DEFAULT_AVATAR; }}
                                         />
                                     </div>
                                 </div>
@@ -186,7 +214,6 @@ const Navbar = () => {
                                     tabIndex={0}
                                     className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow text-white"
                                 >
-                                    {/* Bagian Nama & Email */}
                                     <li className="px-2 py-1 border-b border-gray-600">
                                         <div className="flex flex-col max-w-[180px]">
                                             <span className="text-sm font-semibold truncate">

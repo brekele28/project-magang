@@ -12,10 +12,10 @@ const SyaratLoker = () => {
 
     const from = location.state?.from || "/lowongan-kerja";
     const handleBack = () => {
-        if (from === "/lowongan-full") {
-            navigate("/lowongan-full", { state: { currentPage } });
+        if (from === "/admin/lowongan-full") {
+            navigate("/admin/lowongan-full", { state: { currentPage } });
         } else {
-            navigate("/lowongan-kerja");
+            navigate("/admin/lowongan-kerja");
         }
         window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     };

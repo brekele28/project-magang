@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Container from './Container';
 
 const Navbar = () => {
     const [isSticky, setIsSticky] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
+
+    // ref untuk mendeteksi klik di luar area trigger+dropdown
+    const dropdownRef = useRef(null);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -16,16 +19,38 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Fungsi saat click supaya konten di mulai dari atas
+    // Tutup dropdown saat klik di luar area atau tekan Esc
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+                setShowDropdown(false);
+            }
+        };
+
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                setShowDropdown(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
+
+    // Fungsi saat click supaya konten dimulai dari atas
     const scrollTop = () => {
-        window.scrollTo({ top: 0, left: 0, behavior: "auto" }); // pakai 'smooth' kalau mau
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     };
 
     return (
         <header
             className={`w-full h-[71px] z-50 backdrop-blur-md transition-all duration-300
         ${isSticky ? 'fixed top-0 bg-white/70 shadow-md' : 'absolute top-0 bg-white/70'}
-    `}
+        `}
         >
             <Container className="h-full flex items-center justify-between">
                 {/* Logo */}
@@ -63,13 +88,13 @@ const Navbar = () => {
 
                         {/* Dropdown Karir */}
                         <li
+                            ref={dropdownRef}
                             className="hover:text-[#DC3933] cursor-pointer flex items-center relative"
-                            onClick={() => setShowDropdown(!showDropdown)}
+                            onClick={() => setShowDropdown((v) => !v)}
                         >
                             Karir
                             <i
-                                className={`ri-arrow-right-s-line text-[20px] text-gray-600 transition-transform duration-300 ${showDropdown ? "rotate-90" : "rotate-0"
-                                    }`}
+                                className={`ri-arrow-right-s-line text-[20px] text-gray-600 transition-transform duration-300 ${showDropdown ? "rotate-90" : "rotate-0"}`}
                             ></i>
 
                             {showDropdown && (

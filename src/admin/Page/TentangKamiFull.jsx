@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import axios from "axios";
 import Layout from "../components/Layout";
 import Footer from "../components/Footer";
 import Container from "../components/Container";
@@ -15,54 +16,96 @@ const CardArray = [
     { title: "Menjaga Habit Baik", styleType: 1, description: "Sikap dasar setiap insan Seven INC. untuk selaras antara pikiran, ucapan, dan tindakan, menjaga kejujuran, tanggung jawab, serta kerahasiaan sesuai visi dan amanah perusahaan.", image: "/assets/img/vectorSalaman.png" },
 ];
 
-const HERO_IMAGES = [
+const HERO_IMAGES_FALLBACK = [
     { src: "/assets/img/Tempat.png", alt: "Seven INC billboard - 1" },
     { src: "/assets/img/Internship.png", alt: "Seven INC billboard - 2" },
     { src: "/assets/img/cardLoker.png", alt: "Seven INC billboard - 3" },
 ];
 
 const AUTO_MS = 5000;
-
-// ukuran & jarak kartu (sesuai tampilannya sekarang)
 const CARD_W = 302;
-const CARD_GAP = 52; // gap-x-13 ≈ 52px
-const VISIBLE = 2;   // tampilkan 2 kartu
+const CARD_GAP = 52;
+const VISIBLE = 2;
+
+// helper: bentuk array dari struktur legacy backend (image_url1..3)
+const fromLegacy = (d) => [d?.image_url1, d?.image_url2, d?.image_url3].filter(Boolean);
 
 const TentangKamiFull = () => {
+    const cached = useMemo(() => {
+        try { return JSON.parse(localStorage.getItem("about.cache") || "null"); }
+        catch { return null; }
+    }, []);
+
+    const [about, setAbout] = useState(cached || null);
+
+    // hero dari cache (legacy) → kalau kosong fallback
+    const initialImages = fromLegacy(cached).length
+        ? fromLegacy(cached).map((u, i) => ({ src: u, alt: `About hero ${i + 1}` }))
+        : HERO_IMAGES_FALLBACK;
+
+    const [heroImages, setHeroImages] = useState(initialImages);
+    const [heroIndex, setHeroIndex] = useState(0);
+
+    // core value slider
     const [startIndex, setStartIndex] = useState(0);
     const isFirst = startIndex === 0;
     const isLast = startIndex + VISIBLE >= CardArray.length;
 
-    // --- Hero auto-rotate ---
-    const [heroIndex, setHeroIndex] = useState(0);
+    // refresh data terbaru (pakai legacy structure)
     useEffect(() => {
-        const id = setInterval(() => setHeroIndex((i) => (i + 1) % HERO_IMAGES.length), AUTO_MS);
-        return () => clearInterval(id);
+        let alive = true;
+        const getAbout = async () => {
+            try {
+                const res = await axios.get("http://127.0.0.1:8000/api/about", {
+                    headers: { Accept: "application/json" },
+                });
+                const data = res.data?.data;
+                if (!alive || !data) return;
+
+                setAbout(data);
+
+                const urls = fromLegacy(data);
+                const imgs = urls.length
+                    ? urls.map((u, i) => ({ src: u, alt: `About hero ${i + 1}` }))
+                    : HERO_IMAGES_FALLBACK;
+
+                setHeroImages(imgs);
+
+                // simpan cache apa adanya (legacy)
+                localStorage.setItem("about.cache", JSON.stringify(data));
+            } catch {
+                // ignore
+            }
+        };
+        getAbout();
+        return () => { alive = false; };
     }, []);
 
-    // --- Auto-slide + pause ---
-    const [paused, setPaused] = useState(false);
-    const [animDir, setAnimDir] = useState("next"); // "next" | "prev"
+    // auto-rotate hero
     useEffect(() => {
-        if (paused) return;
-        const id = setInterval(() => {
-            setAnimDir("next");
-            setStartIndex((prev) => (prev + VISIBLE >= CardArray.length ? 0 : prev + 1));
-        }, AUTO_MS);
+        const id = setInterval(() => setHeroIndex(i => (i + 1) % heroImages.length), AUTO_MS);
         return () => clearInterval(id);
-    }, [paused]);
+    }, [heroImages]);
 
-    // --- Tombol prev/next (arah anim tetap) ---
-    const handlePrev = () => { if (!isFirst) setStartIndex((p) => p - 1); };
-    const handleNext = () => { if (!isLast) setStartIndex((p) => p + 1); };
-    const onPrev = () => { setAnimDir("prev"); handlePrev(); };
-    const onNext = () => { setAnimDir("next"); handleNext(); };
-
-    // --- Gesture drag/swipe ---
+    // auto-slide core values
+    const [paused, setPaused] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const [dragX, setDragX] = useState(0);
     const startXRef = useRef(null);
     const SWIPE_THRESHOLD = 60;
+
+    useEffect(() => {
+        if (paused) return;
+        const id = setInterval(() => {
+            setStartIndex(prev => (prev + VISIBLE >= CardArray.length ? 0 : prev + 1));
+        }, AUTO_MS);
+        return () => clearInterval(id);
+    }, [paused]);
+
+    const handlePrev = () => { if (!isFirst) setStartIndex(p => p - 1); };
+    const handleNext = () => { if (!isLast) setStartIndex(p => p + 1); };
+    const onPrev = handlePrev;
+    const onNext = handleNext;
 
     const onPointerDown = (e) => {
         setPaused(true);
@@ -78,8 +121,8 @@ const TentangKamiFull = () => {
     const endDrag = () => {
         if (!isDragging) return;
         if (Math.abs(dragX) > SWIPE_THRESHOLD) {
-            if (dragX < 0 && !isLast) { setAnimDir("next"); setStartIndex((p) => p + 1); }
-            if (dragX > 0 && !isFirst) { setAnimDir("prev"); setStartIndex((p) => p - 1); }
+            if (dragX < 0 && !isLast) setStartIndex(p => p + 1);
+            if (dragX > 0 && !isFirst) setStartIndex(p => p - 1);
         }
         setIsDragging(false);
         setDragX(0);
@@ -87,27 +130,30 @@ const TentangKamiFull = () => {
         startXRef.current = null;
     };
 
-    // hitung posisi track (geser per kartu)
     const baseTranslate = -(startIndex * (CARD_W + CARD_GAP));
     const trackTranslate = isDragging ? baseTranslate + dragX : baseTranslate;
 
     return (
         <Layout>
-            <div className="bg-white text-gray-800 pt-[110px] ">
+            <div className="bg-white text-gray-800 pt-[110px]">
                 <Container>
-                    {/* Hero Section */}
+                    {/* Hero */}
                     <div className="flex flex-col md:flex-row md:items-center justify-between">
                         <div className="w-full md:w-[68%]">
-                            <h3 className="text-[20px] tracking-[0.46em] uppercase text-gray-700 mb-3 font-regular">Tentang Kami</h3>
+                            <h3 className="text-[20px] tracking-[0.46em] uppercase text-gray-700 mb-3">
+                                {about?.subtitle ?? "Tentang Kami"}
+                            </h3>
                             <h1 className="text-[36px] md:text-[40px] font-bold text-gray-900 leading-snug mb-4">
-                                Dari Ide Menjadi Karya<br /> Demi Kemajuan<br />Bersama
+                                {about?.headline ?? (
+                                    <>Dari Ide Menjadi Karya<br /> Demi Kemajuan<br />Bersama</>
+                                )}
                             </h1>
                         </div>
 
-                        {/* Tumpuk semua gambar, yang aktif opacity-2000 */}
+                        {/* Images (fade stack) */}
                         <div className="w-full flex justify-end">
                             <div className="relative max-w-[733px] h-[561px] w-full">
-                                {HERO_IMAGES.map((img, index) => (
+                                {heroImages.map((img, index) => (
                                     <img
                                         key={index}
                                         src={img.src}
@@ -115,36 +161,27 @@ const TentangKamiFull = () => {
                                         className={`absolute inset-0 w-full h-full object-cover rounded-[20px] transition-opacity duration-2000 ease-in-out ${index === heroIndex ? "opacity-100" : "opacity-0"}`}
                                         loading={index === 0 ? "eager" : "lazy"}
                                         decoding="async"
+                                        onError={(e) => { e.currentTarget.src = "/assets/img/Tempat.png"; }}
                                     />
                                 ))}
                             </div>
                         </div>
                     </div>
 
-                    {/* Deskripsi Paragraf */}
+                    {/* Deskripsi Paragraf (dinamis dari API) */}
                     <div className="mt-[85px] flex flex-col md:flex-row justify-between gap-20 text-gray-700 text-[15.5px] leading-[25px] w-full">
+                        {/* Kiri */}
                         <div className="flex-1 w-full flex flex-col gap-6">
-                            <p>Seven Inc. berasal dari kata Seven, yang dalam bahasa Jawa berarti<br />“Pitu”, yang juga memiliki makna
-                                “Pitulungane” atau Pertolongan. Nama ini dipilih sebagai wujud komitmen perusahaan untuk senantiasa <br />
-                                memberikan dukungan dan manfaat nyata bagi masyarakat melalui<br /> berbagai layanan yang ditawarkan.</p>
-                            <p>Seven Inc. merupakan perusahaan digital yang bergerak di bidang<br /> industri kreatif, dengan titik awal usaha
-                                pada sektor fashion atau apparel<br /> pria. Dengan mengedepankan sistem pelayanan daring, Seven Inc. memberikan
-                                kemudahan dan kenyamanan bagi para pelanggan dalam memperoleh produk, tanpa harus mengunjungi toko secara
-                                langsung.</p>
-                            <p>Dalam perkembangannya, Seven Inc. terus memperluas lini bisnisnya ke sektor jasa, antara lain melalui unit
-                                usaha Konveksi yang melayani kebutuhan produksi pakaian secara massal maupun custom, serta Jasa Pengelasan
-                                yang menyediakan layanan konstruksi logam untuk berbagai keperluan.</p>
+                            {(about?.left_paragraphs?.length ? about.left_paragraphs : []).map((t, i) => (
+                                <p key={i}>{t}</p>
+                            ))}
                         </div>
 
+                        {/* Kanan */}
                         <div className="flex-1 w-full flex flex-col gap-6">
-                            <p>Selain fokus pada kegiatan usaha, Seven Inc. juga berperan aktif dalam mendukung pengembangan sumber daya
-                                manusia. Perusahaan membuka kesempatan bagi siswa SMK dan mahasiswa untuk menimba pengalaman kerja melalui
-                                program magang dan pelatihan, sehingga mereka dapat mengasah keterampilan sesuai dengan bidang<br /> keahliannya
-                                masing-masing.</p>
-                            <p>Berbekal semangat Pitulungan, Seven Inc. senantiasa berupaya menjadi mitra terpercaya bagi para pelanggan,
-                                relasi bisnis, dan masyarakat<br /> luas. Dengan inovasi berkelanjutan dan pelayanan profesional, Seven Inc.
-                                berkomitmen untuk menghadirkan solusi terbaik, membuka peluang<br /> kerja sama, serta berkontribusi positif bagi
-                                pertumbuhan industri kreatif <br />di Indonesia.</p>
+                            {(about?.right_paragraphs?.length ? about.right_paragraphs : []).map((t, i) => (
+                                <p key={i}>{t}</p>
+                            ))}
                         </div>
                     </div>
 
@@ -152,14 +189,25 @@ const TentangKamiFull = () => {
                     <div className="mt-[85px] flex flex-col md:flex-row justify-between gap-10 mb-[85px]">
                         {/* Bagian Kiri */}
                         <div className="md:w-1/2 flex flex-col justify-center mt-10">
-                            <h2 className="uppercase tracking-[0.45em] text-gray-600 text-[20px] mb-3">Core Value Perusahaan</h2>
+                            {/* Masukkan kode yang sudah di perbaiki dibawah sini */}
+                            <h2 className="uppercase tracking-[0.45em] text-gray-600 text-[20px] mb-3">
+                                {about?.core_title ?? "Core Value Perusahaan"}
+                            </h2>
+
                             <h3 className="text-[32px] font-bold text-gray-900 mb-4 leading-snug">
-                                Prinsip Utama yang Menjadi<br />Dasar Tumbuh Bersama
+                                {about?.core_headline ?? (
+                                    <>Prinsip Utama yang Menjadi<br />Dasar Tumbuh Bersama</>
+                                )}
                             </h3>
+
                             <p className="text-gray-600 text-[16px] mb-5 leading-relaxed">
-                                Sembilan nilai inti ini menjadi pedoman tim Seven <br /> INC. dalam
-                                membangun budaya kerja profesional, <br /> kolaboratif, dan berkelanjutan
-                                menuju visi <br /> perusahaan yang terus berkembang.
+                                {about?.core_paragraph ?? (
+                                    <>
+                                        Sembilan nilai inti ini menjadi pedoman tim Seven INC. dalam
+                                        membangun budaya kerja profesional, kolaboratif, dan berkelanjutan
+                                        menuju visi perusahaan yang terus berkembang.
+                                    </>
+                                )}
                             </p>
 
                             <div className="flex items-center gap-12">
@@ -184,7 +232,7 @@ const TentangKamiFull = () => {
                             </div>
                         </div>
 
-                        {/* Bagian Kanan — viewport + track (geser translateX), tampilan tetap 2 kartu */}
+                        {/* Bagian Kanan — viewport + track */}
                         <div
                             className="md:w-[50%] w-full ml-auto select-none pr-[660px]"
                             onMouseEnter={() => setPaused(true)}
@@ -195,12 +243,10 @@ const TentangKamiFull = () => {
                             onPointerCancel={endDrag}
                             style={{ touchAction: "pan-y" }}
                         >
-                            {/* viewport: sembunyikan overflow agar terlihat 2 kartu saja */}
                             <div
                                 className="overflow-hidden"
                                 style={{ width: `${VISIBLE * CARD_W + (VISIBLE - 1) * CARD_GAP}px`, marginLeft: "auto" }}
                             >
-                                {/* track: semua kartu, digeser halus */}
                                 <div
                                     className="flex items-start"
                                     style={{
@@ -229,9 +275,10 @@ const TentangKamiFull = () => {
                                                 <h4 className="font-semibold text-gray-950 mb-[31px]" style={{ fontSize: "20px" }}>
                                                     {card.title}
                                                 </h4>
-                                                <p className="text-gray-600 leading-relaxed px-6" 
+                                                <p
+                                                    className="text-gray-600 leading-relaxed px-6"
                                                     style={{ width: "300px", fontSize: "16px", lineHeight: "30px" }}
-                                                    >
+                                                >
                                                     {card.description}
                                                 </p>
                                             </div>
