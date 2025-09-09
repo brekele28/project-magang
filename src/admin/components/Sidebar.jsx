@@ -6,6 +6,7 @@ const Sidebar = () => {
     const [isTentangKamiOpen, setIsTentangKamiOpen] = useState(false);
     const [isBisnisOpen, setIsBisnisOpen] = useState(false);
     const [isBeritaOpen, setIsBeritaOpen] = useState(false);
+    const [isPekerjaanOpen, setIsPekerjaanOpen] = useState(false);
 
     const menuItemClasses = (path) =>
         `flex items-center p-2 rounded-lg ${location.pathname === path
@@ -39,57 +40,18 @@ const Sidebar = () => {
 
                     {/* Tentang Kami */}
                     <li>
-                        <button
-                            type="button"
-                            onClick={() => setIsTentangKamiOpen(!isTentangKamiOpen)}
-                            className="flex items-center w-full p-2 rounded-lg text-gray-900 hover:bg-gray-100"
-                        >
+                        <Link to="/admin/edit-info" className={menuItemClasses("/admin/edit-info")}>
                             <i className="ri-error-warning-line text-[20px]" />
-                            <span className="ms-3 flex-1 text-left">Tentang Kami</span>
-                            <i
-                                className={`ri-arrow-down-s-line transition-transform ${isTentangKamiOpen ? "rotate-180" : ""
-                                    }`}
-                            />
-                        </button>
-                        {isTentangKamiOpen && (
-                            <ul className="pl-8 space-y-2">
-                                <li>
-                                    <Link to="/admin/edit-info" className={menuItemClasses("/admin/edit-info")}>
-                                        Konten Utama
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/admin/edit-info-full" className={menuItemClasses("/admin/edit-info-full")}>
-                                        Konten Lengkap
-                                    </Link>
-                                </li>
-                            </ul>
-                        )}
+                            <span className="ms-3">Tentang Kami</span>
+                        </Link>
                     </li>
 
                     {/* Bisnis Kami */}
                     <li>
-                        <button
-                            type="button"
-                            onClick={() => setIsBisnisOpen(!isBisnisOpen)}
-                            className="flex items-center w-full p-2 rounded-lg text-gray-900 hover:bg-gray-100"
-                        >
+                        <Link to="/admin/edit-bisnis-kami" className={menuItemClasses("/admin/edit-bisnis-kami")}>
                             <i className="ri-shake-hands-line text-[20px]" />
-                            <span className="ms-3 flex-1 text-left">Bisnis Kami</span>
-                            <i
-                                className={`ri-arrow-down-s-line transition-transform ${isBisnisOpen ? "rotate-180" : ""
-                                    }`}
-                            />
-                        </button>
-                        {isBisnisOpen && (
-                            <ul className="pl-8 space-y-2">
-                                <li>
-                                    <Link to="/admin/edit-bisnis-kami" className={menuItemClasses("/admin/edit-bisnis-kami")}>
-                                        Konten Utama
-                                    </Link>
-                                </li>
-                            </ul>
-                        )}
+                            <span className="ms-3">Bisnis Kami</span>
+                        </Link>
                     </li>
 
                     {/* Berita */}
@@ -116,10 +78,40 @@ const Sidebar = () => {
                             </ul>
                         )}
                     </li>
+                    {/* Lowongan Pekerjaan */}
                     <li>
-                        <Link to="/admin/edit-loker" className={menuItemClasses("/admin/edit-loker")}>
+                        <button
+                            type="button"
+                            onClick={() => setIsPekerjaanOpen(!isPekerjaanOpen)}
+                            className="flex items-center w-full p-2 rounded-lg text-gray-900 hover:bg-gray-100"
+                        >
                             <i className="ri-user-settings-line text-[20px]" />
-                            <span className="ms-3">Lowongan Kerja</span>
+                            <span className="ms-3 flex-1 text-left">Lowongan Kerja</span>
+                            <i
+                                className={`ri-arrow-down-s-line transition-transform ${isPekerjaanOpen ? "rotate-180" : ""
+                                    }`}
+                            />
+                        </button>
+                        {isPekerjaanOpen && (
+                            <ul className="pl-8 space-y-2">
+                                <li>
+                                    <Link to="/admin/edit-loker" className={menuItemClasses("/admin/edit-loker")}>
+                                        Konten Utama
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to="/admin/edit-posisi-pekerjaan" className={menuItemClasses("/admin/edit-posisi-pekerjaan")}>
+                                        Posisi Pekerjaan
+                                    </Link>
+                                </li>
+                            </ul>
+                        )}
+                    </li>
+                    {/* Bisnis Kami */}
+                    <li>
+                        <Link to="/admin/edit-link" className={menuItemClasses("/admin/edit-link")}>
+                            <i class="ri-play-circle-fill"></i>
+                            <span className="ms-3">Sosial Media</span>
                         </Link>
                     </li>
                 </ul>
