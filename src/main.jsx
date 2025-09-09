@@ -18,10 +18,11 @@ import AdminIsiBerita from "./admin/Page/IsiBerita.jsx";
 import AdminProfil from "./admin/settings/Profil.jsx";
 import AdminDashboard from "./admin/home/EditNavbar.jsx";
 import AdminEditTentangKami from "./admin/home/EditTentangKami.jsx";
-import AdminEditTentangKamiFull from "./admin/home/EditTentangKamiFull.jsx";
 import AdminEditBerita from "./admin/home/EditBerita.jsx";
 import AdminEditLowonganKerja from "./admin/home/EditLowonganKerja.jsx";
 import AdminEditBisnisKami from "./admin/home/EditBisnisKami.jsx";
+import AdminEditPosisiPekerjaan from "./admin/home/EditPosisiPekerjaan.jsx";
+import AdminLink from "./admin/home/EditLink.jsx";
 
 // user
 import App from "./App.jsx";
@@ -169,14 +170,6 @@ createRoot(document.getElementById("root")).render(
           }
         />
         <Route
-          path="/admin/edit-info-full"
-          element={
-            <ProtectedRouteAdmin>
-              <AdminEditTentangKamiFull />
-            </ProtectedRouteAdmin>
-          }
-        />
-        <Route
           path="/admin/edit-berita"
           element={
             <ProtectedRouteAdmin>
@@ -197,6 +190,22 @@ createRoot(document.getElementById("root")).render(
           element={
             <ProtectedRouteAdmin>
               <AdminEditBisnisKami />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/edit-posisi-pekerjaan"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminEditPosisiPekerjaan />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/edit-link"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminLink />
             </ProtectedRouteAdmin>
           }
         />

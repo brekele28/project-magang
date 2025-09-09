@@ -27,6 +27,8 @@ const EditLowonganKerja = () => {
         title: FALLBACK_HERO.title,
         subtitle: FALLBACK_HERO.subtitle,
         hero_url: FALLBACK_HERO.hero_url,
+        job_position: "",  // Menambahkan job_position
+        career_growth_description: ""  // Menambahkan career_growth_description
     });
 
     // form aktif (bisa berbeda dari base saat user mengedit)
@@ -37,6 +39,8 @@ const EditLowonganKerja = () => {
         subtitle: FALLBACK_HERO.subtitle,
         heroFile: null, // File baru (opsional)
         heroPreview: FALLBACK_HERO.hero_url, // url preview (base/baru)
+        job_position: "",  // Form untuk job_position
+        career_growth_description: ""  // Form untuk career_growth_description
     });
 
     // menandai permintaan reset gambar (hapus gambar server)
@@ -46,19 +50,21 @@ const EditLowonganKerja = () => {
     const [busy, setBusy] = useState(false);
     const [msg, setMsg] = useState("");
 
-    // ========== Helpers ==========
+    // ========== Helpers ========== 
     const isDirty = () =>
         form.heading !== base.heading ||
         form.title !== base.title ||
         form.subtitle !== base.subtitle ||
         !!form.heroFile ||
-        resetHero;
+        resetHero ||
+        form.job_position !== base.job_position ||
+        form.career_growth_description !== base.career_growth_description;
 
     // simpan newline apa adanya
     const toMultiline = (text) => String(text || "");
     const fromMultiline = (text) => String(text || "");
 
-    // ========== Load latest on mount ==========
+    // ========== Load latest on mount ========== 
     useEffect(() => {
         let stop = false;
         (async () => {
@@ -72,6 +78,8 @@ const EditLowonganKerja = () => {
                         title: d.title ?? FALLBACK_HERO.title,
                         subtitle: d.subtitle ?? FALLBACK_HERO.subtitle,
                         hero_url: d.hero_url ?? FALLBACK_HERO.hero_url,
+                        job_position: d.job_position ?? "",
+                        career_growth_description: d.career_growth_description ?? ""
                     };
                     setBase(nextBase);
                     setForm({
@@ -81,6 +89,8 @@ const EditLowonganKerja = () => {
                         subtitle: nextBase.subtitle,
                         heroFile: null,
                         heroPreview: nextBase.hero_url,
+                        job_position: nextBase.job_position,  // Menambahkan job_position ke form
+                        career_growth_description: nextBase.career_growth_description  // Menambahkan career_growth_description ke form
                     });
                     setResetHero(false);
                 }
@@ -94,6 +104,8 @@ const EditLowonganKerja = () => {
                         title: FALLBACK_HERO.title,
                         subtitle: FALLBACK_HERO.subtitle,
                         hero_url: FALLBACK_HERO.hero_url,
+                        job_position: "",  // Fallback untuk job_position
+                        career_growth_description: ""  // Fallback untuk career_growth_description
                     });
                     setForm({
                         id: null,
@@ -102,6 +114,8 @@ const EditLowonganKerja = () => {
                         subtitle: FALLBACK_HERO.subtitle,
                         heroFile: null,
                         heroPreview: FALLBACK_HERO.hero_url,
+                        job_position: "",  // Fallback untuk job_position
+                        career_growth_description: ""  // Fallback untuk career_growth_description
                     });
                     setLoaded(true);
                 }
@@ -110,7 +124,7 @@ const EditLowonganKerja = () => {
         return () => { stop = true; };
     }, []);
 
-    // ========== Handlers ==========
+    // ========== Handlers ========== 
     const onChange = (e) => {
         const { name, value } = e.target;
         setForm((s) => ({ ...s, [name]: value }));
@@ -140,6 +154,8 @@ const EditLowonganKerja = () => {
             subtitle: base.subtitle,
             heroFile: null,
             heroPreview: base.hero_url,
+            job_position: base.job_position,  // Mengembalikan job_position
+            career_growth_description: base.career_growth_description  // Mengembalikan career_growth_description
         });
         setResetHero(false);
         clearFileInput();
@@ -155,6 +171,8 @@ const EditLowonganKerja = () => {
             subtitle: FALLBACK_HERO.subtitle,
             heroFile: null,
             heroPreview: FALLBACK_HERO.hero_url,
+            job_position: "",  // Reset job_position
+            career_growth_description: ""  // Reset career_growth_description
         });
         // jika sebelumnya ada gambar server, tandai untuk dihapus saat simpan
         setResetHero(!!base.hero_url);
@@ -178,6 +196,8 @@ const EditLowonganKerja = () => {
             if (form.subtitle !== base.subtitle) fd.append("subtitle", form.subtitle);
             if (form.heroFile) fd.append("hero", form.heroFile);
             if (resetHero) fd.append("hero_reset", "1");
+            if (form.job_position !== base.job_position) fd.append("job_position", form.job_position);  // Menambahkan job_position
+            if (form.career_growth_description !== base.career_growth_description) fd.append("career_growth_description", form.career_growth_description);  // Menambahkan career_growth_description
 
             let res;
             if (form.id) {
@@ -203,6 +223,8 @@ const EditLowonganKerja = () => {
                     title: dataReturned.title ?? form.title,
                     subtitle: dataReturned.subtitle ?? form.subtitle,
                     hero_url: dataReturned.hero_url ?? null,
+                    job_position: dataReturned.job_position ?? form.job_position,  // Menambahkan job_position
+                    career_growth_description: dataReturned.career_growth_description ?? form.career_growth_description  // Menambahkan career_growth_description
                 };
                 setBase(nextBase);
                 setForm({
@@ -212,6 +234,8 @@ const EditLowonganKerja = () => {
                     subtitle: nextBase.subtitle,
                     heroFile: null,
                     heroPreview: nextBase.hero_url,
+                    job_position: nextBase.job_position,  // Menambahkan job_position
+                    career_growth_description: nextBase.career_growth_description  // Menambahkan career_growth_description
                 });
                 setResetHero(false);
                 clearFileInput();
@@ -227,7 +251,7 @@ const EditLowonganKerja = () => {
         }
     };
 
-    // ========== UI ==========
+    // ========== UI ========== 
     return (
         <AdminLayout>
             <h1 className="text-black text-5xl font-bold text-center italic">Lowongan Kerja</h1>
@@ -277,6 +301,31 @@ const EditLowonganKerja = () => {
                                     rows={3}
                                     className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400"
                                     placeholder="Temukan peluang karir Anda dengan posisi yang sesuai."
+                                />
+                            </label>
+
+                            {/* Posisi Pekerjaan */}
+                            <label className="block mb-4">
+                                <span className="block text-sm font-medium text-gray-700 mb-1">Posisi Pekerjaan</span>
+                                <input
+                                    name="job_position"
+                                    value={form.job_position}
+                                    onChange={onChange}
+                                    className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400"
+                                    placeholder="Masukkan posisi pekerjaan"
+                                />
+                            </label>
+
+                            {/* Deskripsi Karir */}
+                            <label className="block mb-4">
+                                <span className="block text-sm font-medium text-gray-700 mb-1">Mulai pertumbuhan karirmu sekarang</span>
+                                <textarea
+                                    name="career_growth_description"
+                                    value={form.career_growth_description}
+                                    onChange={onChange}
+                                    rows={3}
+                                    className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-400"
+                                    placeholder="Masukkan deskripsi pertumbuhan karirmu"
                                 />
                             </label>
                         </div>

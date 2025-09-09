@@ -1,3 +1,4 @@
+// LowonganKerja.jsx
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
@@ -7,6 +8,7 @@ import Container from "../components/Container";
 // === KONFIG API (Hero Lowongan Kerja)
 const API_BASE = "http://127.0.0.1:8000/api";
 const ENDPOINT_WORKS_LATEST = `${API_BASE}/works/latest`;
+const ENDPOINT_JOBS = `${API_BASE}/job-works`;
 
 // === Fallback Hero (dipakai kalau API kosong/error)
 const FALLBACK_HERO = {
@@ -34,10 +36,20 @@ const CARD_W = 302;
 const CARD_GAP = 52;
 const VISIBLE = 2;
 
+const formatIDDate = (dateStr) => {
+    if (!dateStr) return "-";
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return "-";
+    return d.toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" });
+};
+
 const LowonganKerja = () => {
     // ===== Data dari API =====
     const [hero, setHero] = useState(null);
     const [loaded, setLoaded] = useState(false);
+
+    // ===== 3 lowongan terbaru (dinamis, ganti dummy) =====
+    const [latestJobs, setLatestJobs] = useState([]);
 
     // Helper untuk render judul dengan line-break "\n"
     const renderWithBreaks = (text) =>
@@ -64,17 +76,72 @@ const LowonganKerja = () => {
                         title: d.title || FALLBACK_HERO.title,
                         subtitle: d.subtitle || FALLBACK_HERO.subtitle,
                         image_url: d.hero_url || FALLBACK_HERO.image_url,
+                        // Tambahan untuk teks dinamis di bagian "Posisi Pekerjaan"
+                        job_position: d.job_position || "Posisi Pekerjaan",
+                        career_growth_description: d.career_growth_description || "Mulai pertumbuhan karirmu sekarang.",
                     });
                 } else if (!aborted) {
-                    setHero(FALLBACK_HERO);
+                    setHero({
+                        ...FALLBACK_HERO,
+                        job_position: "Posisi Pekerjaan",
+                        career_growth_description: "Mulai pertumbuhan karirmu sekarang.",
+                    });
                 }
             } catch {
-                if (!aborted) setHero(FALLBACK_HERO);
+                if (!aborted)
+                    setHero({
+                        ...FALLBACK_HERO,
+                        job_position: "Posisi Pekerjaan",
+                        career_growth_description: "Mulai pertumbuhan karirmu sekarang.",
+                    });
             } finally {
                 if (!aborted) setLoaded(true);
             }
         })();
         return () => { aborted = true; };
+    }, []);
+
+    // === Ambil 3 lowongan terbaru; otomatis update saat ada data baru ===
+    useEffect(() => {
+        let stop = false;
+        const fetchLatestThree = async () => {
+            try {
+                // Ambil page 1 untuk mendapatkan last_page
+                const first = await fetch(`${ENDPOINT_JOBS}?page=1`, { cache: "no-store" });
+                const firstJson = await first.json();
+                const lastPage = firstJson?.last_page || 1;
+
+                // Ambil halaman terakhir (umumnya berisi ID paling baru, ascending di backend)
+                const lastRes = lastPage === 1
+                    ? firstJson
+                    : await (await fetch(`${ENDPOINT_JOBS}?page=${lastPage}`, { cache: "no-store" })).json();
+
+                let pool = Array.isArray(lastRes?.data) ? [...lastRes.data] : [];
+
+                // Jika item di halaman terakhir < 3, ambil halaman sebelumnya untuk melengkapi
+                if (pool.length < 3 && lastPage > 1) {
+                    const prevRes = await fetch(`${ENDPOINT_JOBS}?page=${lastPage - 1}`, { cache: "no-store" });
+                    const prevJson = await prevRes.json();
+                    if (Array.isArray(prevJson?.data)) pool = pool.concat(prevJson.data);
+                }
+
+                // Urutkan desc by id dan ambil 3 teratas
+                const latest = pool
+                    .filter(Boolean)
+                    .sort((a, b) => (b?.id ?? 0) - (a?.id ?? 0))
+                    .slice(0, 3);
+
+                if (!stop) setLatestJobs(latest);
+            } catch (e) {
+                if (!stop) setLatestJobs([]);
+            }
+        };
+
+        fetchLatestThree();
+
+        // Poll ringan agar near-real-time ketika admin menambah data
+        const id = setInterval(fetchLatestThree, 8000);
+        return () => { stop = true; clearInterval(id); };
     }, []);
 
     // index awal kartu yang ditampilkan (kiri)
@@ -290,69 +357,58 @@ const LowonganKerja = () => {
                     {/* Posisi Pekerjaan */}
                     <div className="mt-24">
                         <div className="text-center">
-                            <h3 className="text-[20px] tracking-[0.46em] uppercase text-gray-700 mb-3">Posisi Pekerjaan</h3>
-                            <h2 className="text-[32px] font-bold text-gray-900 mb-10">Mulai pertumbuhan karirmu sekarang.</h2>
+                            <h3 className="text-[20px] tracking-[0.46em] uppercase text-gray-700 mb-3">
+                                {hero?.job_position || "Posisi Pekerjaan"}
+                            </h3>
+                            <h2 className="text-[32px] font-bold text-gray-900 mb-10">
+                                {hero?.career_growth_description || "Mulai pertumbuhan karirmu sekarang."}
+                            </h2>
                         </div>
 
-                        {/* Data Lowongan */}
-                        {[
-                            {
-                                title: "Staff Human Resources Development (HRD)",
-                                company: "Seven INC",
-                                location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
-                                closeDate: "30 Juni 2025",
-                            },
-                            {
-                                title: "Staff Human Resources Development (HRD)",
-                                company: "Seven INC",
-                                location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
-                                closeDate: "30 Juni 2025",
-                            },
-                            {
-                                title: "Staff Human Resources Development (HRD)",
-                                company: "Seven INC",
-                                location: "Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta",
-                                closeDate: "30 Juni 2025",
-                            },
-                        ].map((job, index) => (
-                            <div key={index} className="w-full mb-[48px]">
-                                {/* Bagian Atas */}
-                                <div className="border border-gray-300 rounded-t-xl px-14 p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                                    <div>
-                                        <h3 className="text-[24px] font-bold text-gray-900">{job.title}</h3>
-                                        <p className="text-[16px] text-[#7B7B7B]">{job.company}</p>
-                                    </div>
-                                    <button
-                                        onClick={() => handleSeeDetail(job)}
-                                        className="bg-[#DC3933] text-white rounded-full border border-[#e5e7eb] hover:bg-white hover:text-black transition-all duration-300 cursor-pointer"
-                                        style={{ width: "245px", height: "63px" }}
-                                    >
-                                        Selengkapnya
-                                    </button>
-                                </div>
-
-                                {/* Bagian Bawah */}
-                                <div className="border-x border-b border-gray-300 rounded-b-xl px-14 p-1 flex flex-wrap justify-between items-center text-gray-700 text-[16px]">
-                                    {/* Pekerjaan */}
-                                    <div className="flex items-center gap-3 text-[12px] text-[#7B7B7B]">
-                                        <img src="/assets/img/bagComponen.png" alt="bag-icon" />
-                                        <span>{job.title}</span>
+                        {/* Data Lowongan (DINAMIS: 3 TERBARU) */}
+                        {latestJobs.length > 0 ? (
+                            latestJobs.map((job, index) => (
+                                <div key={job.id ?? index} className="w-full mb-[48px]">
+                                    {/* Bagian Atas */}
+                                    <div className="border border-gray-300 rounded-t-xl px-14 p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                        <div>
+                                            <h3 className="text-[24px] font-bold text-gray-900">{job.title}</h3>
+                                            <p className="text-[16px] text-[#7B7B7B]">{job.company}</p>
+                                        </div>
+                                        <button
+                                            onClick={() => handleSeeDetail(job)}
+                                            className="bg-[#DC3933] text-white rounded-full border border-[#e5e7eb] hover:bg-white hover:text-black transition-all duration-300 cursor-pointer"
+                                            style={{ width: "245px", height: "63px" }}
+                                        >
+                                            Selengkapnya
+                                        </button>
                                     </div>
 
-                                    {/* Lokasi */}
-                                    <div className="flex items-center gap-2 text-[12px] text-[#7B7B7B]">
-                                        <i className="ri-map-pin-line text-[24px]"></i>
-                                        <span>{job.location}</span>
-                                    </div>
+                                    {/* Bagian Bawah */}
+                                    <div className="border-x border-b border-gray-300 rounded-b-xl px-14 p-1 flex flex-wrap justify-between items-center text-gray-700 text-[16px]">
+                                        {/* Pekerjaan */}
+                                        <div className="flex items-center gap-3 text-[12px] text-[#7B7B7B]">
+                                            <img src="/assets/img/bagComponen.png" alt="bag-icon" />
+                                            <span>{job.title}</span>
+                                        </div>
 
-                                    {/* Tanggal */}
-                                    <div className="flex items-center gap-2 text-[12px] text-[#7B7B7B]">
-                                        <i className="ri-time-line text-[24px]"></i>
-                                        <span>Close Date : {job.closeDate}</span>
+                                        {/* Lokasi */}
+                                        <div className="flex items-center gap-2 text-[12px] text-[#7B7B7B]">
+                                            <i className="ri-map-pin-line text-[24px]"></i>
+                                            <span>{job.location}</span>
+                                        </div>
+
+                                        {/* Tanggal */}
+                                        <div className="flex items-center gap-2 text-[12px] text-[#7B7B7B]">
+                                            <i className="ri-time-line text-[24px]"></i>
+                                            <span>Close Date : {formatIDDate(job.close_date)}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))
+                        ) : (
+                            <p className="text-center text-gray-500">Tidak ada lowongan pekerjaan tersedia.</p>
+                        )}
 
                         {/* Tombol Lihat Lebih Lanjut */}
                         <div className="flex justify-center">
