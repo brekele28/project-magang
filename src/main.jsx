@@ -23,6 +23,7 @@ import AdminEditLowonganKerja from "./admin/home/EditLowonganKerja.jsx";
 import AdminEditBisnisKami from "./admin/home/EditBisnisKami.jsx";
 import AdminEditPosisiPekerjaan from "./admin/home/EditPosisiPekerjaan.jsx";
 import AdminLink from "./admin/home/EditLink.jsx";
+import AdminEditInternship from "./admin/home/EditInternship.jsx";
 
 // user
 import App from "./App.jsx";
@@ -206,6 +207,14 @@ createRoot(document.getElementById("root")).render(
           element={
             <ProtectedRouteAdmin>
               <AdminLink />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/edit-internship"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminEditInternship />
             </ProtectedRouteAdmin>
           }
         />

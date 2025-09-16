@@ -1,8 +1,33 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Container from "./Container";
+import axios from "axios";
 
 const Footer = () => {
-    // Scroll ke atas tiap klik menu
+    const [socialLinks, setSocialLinks] = useState({
+        linkedin: "",
+        instagram: "",
+        facebook: "",
+        x: "",
+    });
+
+    useEffect(() => {
+        const fetchLinks = async () => {
+            try {
+                const res = await axios.get("http://127.0.0.1:8000/api/social-links");
+                const links = res.data.reduce((acc, link) => {
+                    acc[link.platform] = link.url;
+                    return acc;
+                }, {});
+                setSocialLinks(links);
+            } catch (error) {
+                console.error("Error fetching social links", error);
+            }
+        };
+        fetchLinks();
+    }, []);
+
+    // Scroll to top when a link is clicked
     const scrollTop = () => {
         window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     };
@@ -21,10 +46,18 @@ const Footer = () => {
 
                     {/* Icon Sosmed */}
                     <div className="flex space-x-4 text-[35px]">
-                        <i class="ri-linkedin-box-fill cursor-pointer"></i>
-                        <i class="ri-instagram-line cursor-pointer"></i>
-                        <i class="ri-facebook-circle-fill cursor-pointer"></i>
-                        <i className="ri-twitter-x-fill cursor-pointer"></i>
+                        <a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
+                            <i className="ri-linkedin-box-fill cursor-pointer"></i>
+                        </a>
+                        <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer">
+                            <i className="ri-instagram-line cursor-pointer"></i>
+                        </a>
+                        <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer">
+                            <i className="ri-facebook-circle-fill cursor-pointer"></i>
+                        </a>
+                        <a href={socialLinks.x} target="_blank" rel="noopener noreferrer">
+                            <i className="ri-twitter-x-fill cursor-pointer"></i>
+                        </a>
                     </div>
                 </div>
 
@@ -37,7 +70,7 @@ const Footer = () => {
                     <div>
                         <h3 className="text-[30px] font-bold mb-3">Kantor Pusat</h3>
                         <p className="flex items-start space-x-2">
-                            <i class="ri-map-pin-line text-[25px]"></i>
+                            <i className="ri-map-pin-line text-[25px]"></i>
                             <span className="text-[16px]">
                                 Jl. Raya Janti Gg. Harjuna No.59,
                                 Jaranan, Karangjambe, Kec. Banguntapan, Kabupaten Bantul,

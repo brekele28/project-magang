@@ -1,8 +1,17 @@
+// SyaratLoker.jsx
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import Layout from "../components/Layout";
 import Footer from "../components/Footer";
 import Container from "../components/Container";
+
+// Fungsi untuk format tanggal Close Date
+const formatCloseDate = (dateStr) => {
+    if (!dateStr) return "-";
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return "-";
+    return d.toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" });
+};
 
 const SyaratLoker = () => {
     const navigate = useNavigate();
@@ -54,7 +63,8 @@ const SyaratLoker = () => {
                         </div>
                         <div className="flex items-center gap-2">
                             <i className="ri-time-line text-[24px]"></i>
-                            <span>Close Date: {job?.closeDate}</span>
+                            {/* Menampilkan Close Date menggunakan formatCloseDate */}
+                            <span>Close Date: {formatCloseDate(job?.close_date)}</span>
                         </div>
                     </div>
 

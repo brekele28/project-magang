@@ -132,7 +132,7 @@ const EditPosisiPekerjaan = () => {
                 />
                 <button
                     onClick={editId ? handleSavePosition : handleAddPosition}
-                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                    className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-800"
                 >
                     {editId ? "Simpan Perubahan" : "Tambah Posisi"}
                 </button>
@@ -154,13 +154,13 @@ const EditPosisiPekerjaan = () => {
                                 <div className="flex space-x-2">
                                     <button
                                         onClick={() => handleEditPosition(position.id)}
-                                        className="bg-yellow-500 text-white px-4 py-2 rounded"
+                                        className="bg-yellow-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-yellow-700"
                                     >
                                         Edit
                                     </button>
                                     <button
                                         onClick={() => handleDeletePosition(position.id)}
-                                        className="bg-red-500 text-white px-4 py-2 rounded"
+                                        className="bg-red-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-red-700"
                                     >
                                         Hapus
                                     </button>
@@ -177,7 +177,7 @@ const EditPosisiPekerjaan = () => {
                     <button
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
-                        className="px-4 py-2 bg-gray-300 text-white rounded disabled:bg-gray-500"
+                        className="px-4 py-2 bg-gray-500 hover:bg-gray-300 cursor-pointer text-white rounded disabled:bg-gray-500"
                     >
                         Previous
                     </button>
@@ -185,7 +185,7 @@ const EditPosisiPekerjaan = () => {
                     <button
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages}
-                        className="px-4 py-2 bg-gray-300 text-white rounded disabled:bg-gray-500"
+                        className="px-4 py-2 bg-gray-500 hover:bg-gray-300 text-white rounded disabled:bg-gray-500 cursor-pointer"
                     >
                         Next
                     </button>
