@@ -1,4 +1,3 @@
-// LowonganKerjaFull.jsx
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -168,6 +167,13 @@ const LowonganKerjaFull = () => {
         }
     };
 
+    const formatCloseDate = (dateStr) => {
+        if (!dateStr) return "-";
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return "-";
+        return d.toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" });
+    };
+
     return (
         <Layout>
             <div className="bg-white text-gray-800 pt-[130px] pb-24">
@@ -242,7 +248,7 @@ const LowonganKerjaFull = () => {
 
                                         <div className="flex items-center gap-2 text-[12px] text-[#7B7B7B]">
                                             <i className="ri-time-line text-[24px]"></i>
-                                            <span>Close Date : {new Date(job.close_date).toLocaleDateString()}</span>
+                                            <span>Close Date : {formatCloseDate(job.close_date)}</span>
                                         </div>
                                     </div>
                                 </div>

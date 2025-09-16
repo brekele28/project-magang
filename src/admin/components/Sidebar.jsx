@@ -3,9 +3,6 @@ import { useState } from "react";
 
 const Sidebar = () => {
     const location = useLocation();
-    const [isTentangKamiOpen, setIsTentangKamiOpen] = useState(false);
-    const [isBisnisOpen, setIsBisnisOpen] = useState(false);
-    const [isBeritaOpen, setIsBeritaOpen] = useState(false);
     const [isPekerjaanOpen, setIsPekerjaanOpen] = useState(false);
 
     const menuItemClasses = (path) =>
@@ -28,7 +25,7 @@ const Sidebar = () => {
                     <li>
                         <Link to="/admin/dashboard" className={menuItemClasses("/admin/dashboard")}>
                             <i className="ri-dashboard-line text-[20px]" />
-                            <span className="ms-3">Navbar</span>
+                            <span className="ms-3">Edit Logo</span>
                         </Link>
                     </li>
                     <li>
@@ -53,30 +50,19 @@ const Sidebar = () => {
                             <span className="ms-3">Bisnis Kami</span>
                         </Link>
                     </li>
-
                     {/* Berita */}
                     <li>
-                        <button
-                            type="button"
-                            onClick={() => setIsBeritaOpen(!isBeritaOpen)}
-                            className="flex items-center w-full p-2 rounded-lg text-gray-900 hover:bg-gray-100"
-                        >
+                        <Link to="/admin/edit-berita" className={menuItemClasses("/admin/edit-berita")}>
                             <i className="ri-news-line text-[20px]" />
-                            <span className="ms-3 flex-1 text-left">Berita</span>
-                            <i
-                                className={`ri-arrow-down-s-line transition-transform ${isBeritaOpen ? "rotate-180" : ""
-                                    }`}
-                            />
-                        </button>
-                        {isBeritaOpen && (
-                            <ul className="pl-8 space-y-2">
-                                <li>
-                                    <Link to="/admin/edit-berita" className={menuItemClasses("/admin/edit-berita")}>
-                                        Konten Utama
-                                    </Link>
-                                </li>
-                            </ul>
-                        )}
+                            <span className="ms-3">Berita</span>
+                        </Link>
+                    </li>
+                    {/* Internship */}
+                    <li>
+                        <Link to="/admin/edit-internship" className={menuItemClasses("/admin/edit-internship")}>
+                            <i class="ri-ship-line text-[20px]" />
+                            <span className="ms-3">Internship</span>
+                        </Link>
                     </li>
                     {/* Lowongan Pekerjaan */}
                     <li>
@@ -85,7 +71,7 @@ const Sidebar = () => {
                             onClick={() => setIsPekerjaanOpen(!isPekerjaanOpen)}
                             className="flex items-center w-full p-2 rounded-lg text-gray-900 hover:bg-gray-100"
                         >
-                            <i className="ri-user-settings-line text-[20px]" />
+                            <i className="ri-briefcase-2-line text-[20px]" />
                             <span className="ms-3 flex-1 text-left">Lowongan Kerja</span>
                             <i
                                 className={`ri-arrow-down-s-line transition-transform ${isPekerjaanOpen ? "rotate-180" : ""
@@ -107,10 +93,10 @@ const Sidebar = () => {
                             </ul>
                         )}
                     </li>
-                    {/* Bisnis Kami */}
+                    {/* Link */}
                     <li>
                         <Link to="/admin/edit-link" className={menuItemClasses("/admin/edit-link")}>
-                            <i class="ri-play-circle-fill"></i>
+                            <i class="ri-play-circle-fill text-[20px]"></i>
                             <span className="ms-3">Sosial Media</span>
                         </Link>
                     </li>
