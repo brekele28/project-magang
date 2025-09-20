@@ -4,6 +4,7 @@ import { useState } from "react";
 const Sidebar = () => {
     const location = useLocation();
     const [isPekerjaanOpen, setIsPekerjaanOpen] = useState(false);
+    const [isBeranda, setIsBeranda] = useState(false);
 
     const menuItemClasses = (path) =>
         `flex items-center p-2 rounded-lg ${location.pathname === path
@@ -22,12 +23,36 @@ const Sidebar = () => {
                 </Link>
 
                 <ul className="space-y-2 font-medium">
+                    {/* Beranda */}
                     <li>
-                        <Link to="/admin/dashboard" className={menuItemClasses("/admin/dashboard")}>
+                        <button
+                            type="button"
+                            onClick={() => setIsBeranda(!isBeranda)}
+                            className="flex items-center w-full p-2 rounded-lg text-gray-900 hover:bg-gray-100"
+                        >
                             <i className="ri-dashboard-line text-[20px]" />
-                            <span className="ms-3">Edit Logo</span>
-                        </Link>
+                            <span className="ms-3 flex-1 text-left">Appearance</span>
+                            <i
+                                className={`ri-arrow-down-s-line transition-transform ${isBeranda ? "rotate-180" : ""
+                                    }`}
+                            />
+                        </button>
+                        {isBeranda && (
+                            <ul className="pl-8 space-y-2">
+                                <li>
+                                    <Link to="/admin/dashboard" className={menuItemClasses("/admin/dashboard")}>
+                                        Edit Logo
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to="/admin/edit-appearance" className={menuItemClasses("/admin/edit-appearance")}>
+                                        Edit Hero
+                                    </Link>
+                                </li>
+                            </ul>
+                        )}
                     </li>
+                    {/* Edit Profil */}
                     <li>
                         <Link to="/admin/profil" className={menuItemClasses("/admin/profil")}>
                             <i className="ri-user-settings-line text-[20px]" />

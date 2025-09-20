@@ -24,6 +24,7 @@ import AdminEditBisnisKami from "./admin/home/EditBisnisKami.jsx";
 import AdminEditPosisiPekerjaan from "./admin/home/EditPosisiPekerjaan.jsx";
 import AdminLink from "./admin/home/EditLink.jsx";
 import AdminEditInternship from "./admin/home/EditInternship.jsx";
+import AdminEditHeroSection from "./admin/home/EditHeroSection.jsx";
 
 // user
 import App from "./App.jsx";
@@ -218,7 +219,15 @@ createRoot(document.getElementById("root")).render(
             </ProtectedRouteAdmin>
           }
         />
-
+        <Route
+          path="/admin/edit-appearance"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminEditHeroSection />
+            </ProtectedRouteAdmin>
+          }
+        />
+        
         {/* Route Login Admin */}
         <Route path="/admin-login" element={<LoginAdmin />} />
       </Routes>
