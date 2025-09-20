@@ -1,10 +1,17 @@
+// src/components/Navbar.jsx
 import { Link } from "react-router-dom";
-import React, { useState, useEffect, useRef } from 'react';
-import Container from './Container';
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import Container from "./Container";
 
 const Navbar = () => {
     const [isSticky, setIsSticky] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
+
+    // cache logo agar tidak berkedip saat pindah halaman
+    const [logoUrl, setLogoUrl] = useState(() => {
+        return localStorage.getItem("navbarLogoUrl") || "/assets/img/Logo.png";
+    });
 
     // ref untuk mendeteksi klik di luar area trigger+dropdown
     const dropdownRef = useRef(null);
@@ -15,8 +22,8 @@ const Navbar = () => {
             setIsSticky(scrollTop > 110);
         };
 
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
     // Tutup dropdown saat klik di luar area atau tekan Esc
@@ -28,16 +35,42 @@ const Navbar = () => {
         };
 
         const handleKeyDown = (e) => {
-            if (e.key === 'Escape') {
+            if (e.key === "Escape") {
                 setShowDropdown(false);
             }
         };
 
-        document.addEventListener('mousedown', handleClickOutside);
-        document.addEventListener('keydown', handleKeyDown);
+        document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener("keydown", handleKeyDown);
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-            document.removeEventListener('keydown', handleKeyDown);
+            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("keydown", handleKeyDown);
+        };
+    }, []);
+
+    // Ambil logo dari API (tanpa mengubah tampilan jika cache sudah ada)
+    useEffect(() => {
+        let cancelled = false;
+
+        (async () => {
+            try {
+                const res = await axios.get("http://127.0.0.1:8000/api/admin/logo");
+                const url = res?.data?.data?.url || null;
+                if (!cancelled && url) {
+                    setLogoUrl((prev) => {
+                        if (prev !== url) {
+                            localStorage.setItem("navbarLogoUrl", url);
+                        }
+                        return url;
+                    });
+                }
+            } catch {
+                // abaikan error, gunakan cache/fallback
+            }
+        })();
+
+        return () => {
+            cancelled = true;
         };
     }, []);
 
@@ -49,16 +82,23 @@ const Navbar = () => {
     return (
         <header
             className={`w-full h-[71px] z-50 backdrop-blur-md transition-all duration-300
-        ${isSticky ? 'fixed top-0 bg-white/70 shadow-md' : 'absolute top-0 bg-white/70'}
+        ${isSticky ? "fixed top-0 bg-white/70 shadow-md" : "absolute top-0 bg-white/70"}
         `}
         >
             <Container className="h-full flex items-center justify-between">
                 {/* Logo */}
                 <div className="flex items-center">
                     <img
-                        className="h-12 w-auto object-contain"
-                        src="/assets/img/Logo.png"
+                        className="h-12 w-auto object-contain cursor-pointer"
+                        src={logoUrl}
                         alt="Logo SEVEN INC."
+                        loading="eager"
+                        onError={(e) => {
+                            // jika URL API rusak, fallback & bersihkan cache
+                            localStorage.removeItem("navbarLogoUrl");
+                            setLogoUrl("/assets/img/Logo.png");
+                            e.currentTarget.src = "/assets/img/Logo.png";
+                        }}
                     />
                 </div>
 
@@ -94,7 +134,8 @@ const Navbar = () => {
                         >
                             Karir
                             <i
-                                className={`ri-arrow-right-s-line text-[20px] text-gray-600 transition-transform duration-300 ${showDropdown ? "rotate-90" : "rotate-0"}`}
+                                className={`ri-arrow-right-s-line text-[20px] text-gray-600 transition-transform duration-300 ${showDropdown ? "rotate-90" : "rotate-0"
+                                    }`}
                             ></i>
 
                             {showDropdown && (
